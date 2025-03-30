@@ -30,9 +30,13 @@ public slots:
 
 private:
 
-	Ui::ClassicalChessWidget* m_ui;
+	Ui::ClassicalChessWidget* m_ui = nullptr;
+    int m_choosenSide = 0; // 0 - havent choosen, 1 - white, 2 - black;
+    bool m_waitingOpponent = false;
     
     void establishingConnections();
+    void startMatch();
+    void connectToHost();
 
 };
 
