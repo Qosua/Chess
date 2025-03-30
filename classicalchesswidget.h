@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_classicalchesswidget.h"
+#include "chessboard.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -29,7 +30,8 @@ public slots:
 	void openMatchFinder();
 
 private:
-
+    
+    ChessBoard* m_board = nullptr;
 	Ui::ClassicalChessWidget* m_ui = nullptr;
     int m_choosenSide = 0; // 0 - havent choosen, 1 - white, 2 - black;
     bool m_waitingOpponent = false;
@@ -37,7 +39,9 @@ private:
     void establishingConnections();
     void startMatch();
     void connectToHost();
-
+    
+protected:
+    void resizeEvent(QResizeEvent *event);
 };
 
 

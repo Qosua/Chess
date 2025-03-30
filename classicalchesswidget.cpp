@@ -7,7 +7,6 @@ ClassicalChessWidget::ClassicalChessWidget(QWidget* parent) :
     
     establishingConnections();
     
-    
 }
 
 ClassicalChessWidget::~ClassicalChessWidget() {
@@ -95,11 +94,33 @@ void ClassicalChessWidget::startMatch() {
     m_waitingOpponent = true;
     
     //server setup;
+    m_ui->stackedWidget->setCurrentIndex(1);
+    
+    m_board = new ChessBoard;
+    m_board->setupBoard();
+    
+    m_ui->graphicsView->setScene(m_board);
+    m_ui->graphicsView->scene()->setSceneRect(QRect(0,0, 640,640));
+    m_ui->graphicsView->fitInView(m_ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
     
 }
 void ClassicalChessWidget::connectToHost() {
     
+    if(m_ui->ipLine->text().isEmpty()){
+        m_ui->infoLabel_2->setText("You need to enter IP address");
+        m_ui->infoLabel_2->setStyleSheet("color: red");
+    }
     
+    QString address = m_ui->connectToHost->text();
+    
+}
+
+void ClassicalChessWidget::resizeEvent(QResizeEvent *event) {
+    
+    if(m_ui->graphicsView->scene() != nullptr){
+        m_ui->graphicsView->scene()->setSceneRect(QRect(0,0, 640,640));
+        m_ui->graphicsView->fitInView(m_ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    }
     
 }
 

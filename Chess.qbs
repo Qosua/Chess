@@ -19,6 +19,11 @@ QtApplication {
                 "mainwindow.h"]
     }
     Group{
+        name: "ChessBoard";
+        files: ["chessboard.cpp",
+                "chessboard.h"]
+    }
+    Group{
         name: "MenuWidget";
         files: ["menuwidget.cpp",
                 "menuwidget.h",
