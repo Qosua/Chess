@@ -6,6 +6,7 @@ ClassicalChessWidget::ClassicalChessWidget(QWidget* parent) :
 	m_ui->setupUi(this);
     
     establishingConnections();
+    m_ui->graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     
 }
 
@@ -18,8 +19,6 @@ ClassicalChessWidget::~ClassicalChessWidget() {
 void ClassicalChessWidget::openMatchMaker() {
     
     m_ui->stackedWidget->setCurrentIndex(0);
-    
-
 
 }
 
@@ -117,8 +116,9 @@ void ClassicalChessWidget::connectToHost() {
 
 void ClassicalChessWidget::resizeEvent(QResizeEvent *event) {
     
+    Q_UNUSED(event)
+    
     if(m_ui->graphicsView->scene() != nullptr){
-        m_ui->graphicsView->scene()->setSceneRect(QRect(0,0, 640,640));
         m_ui->graphicsView->fitInView(m_ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
     }
     

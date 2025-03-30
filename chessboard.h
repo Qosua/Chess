@@ -4,6 +4,10 @@
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <QPen>
+#include <QVector>
+#include <QGraphicsBlurEffect>
+
+#include "chesspiece.h"
 
 class ChessBoard : public QGraphicsScene{
     
@@ -17,9 +21,10 @@ private:
     
     void drawField();
     void drawPieces();
+    void preparePieces();
     
     size_t m_cellSize = 80;
-    
+    QVector<ChessPiece*> m_piecesArr;
     
 };
 

@@ -21,7 +21,9 @@ QtApplication {
     Group{
         name: "ChessBoard";
         files: ["chessboard.cpp",
-                "chessboard.h"]
+                "chessboard.h",
+                "chesspiece.cpp",
+                "chesspiece.h",]
     }
     Group{
         name: "MenuWidget";
@@ -38,7 +40,7 @@ QtApplication {
     
     files: [
         "main.cpp",
-        "resources.qrc"
+        "resources.qrc",
     ]
     
     
