@@ -4,12 +4,13 @@
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <QPen>
-#include <QVector>
+#include <vector>
 #include <QGraphicsBlurEffect>
 
 #include "chesspiece.h"
 
 class ChessBoard : public QGraphicsScene{
+    
     
 public:
     ChessBoard();
@@ -22,9 +23,10 @@ private:
     void drawField();
     void drawPieces();
     void preparePieces();
+    void validateTurn(QPointF newPos, QPointF oldPos);
     
     size_t m_cellSize = 80;
-    QVector<ChessPiece*> m_piecesArr;
+    std::vector<ChessPiece*> m_piecesArr;
     
 };
 
