@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/bb.png</file>
+        <file>icons/bk.png</file>
+        <file>icons/bn.png</file>
+        <file>icons/bp.png</file>
+        <file>icons/bq.png</file>
+        <file>icons/br.png</file>
+        <file>icons/wb.png</file>
+        <file>icons/wk.png</file>
+        <file>icons/wn.png</file>
+        <file>icons/wp.png</file>
+        <file>icons/wq.png</file>
+        <file>icons/wr.png</file>
+        <file>icons/close.png</file>
+    </qresource>
+</RCC>
