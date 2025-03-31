@@ -29,7 +29,15 @@ private:
     
     size_t m_cellSize = 80;
     std::vector<ChessPiece*> m_piecesArr;
+    ChessPiece* m_lastChosenPiece = nullptr;
+    QPointF m_lastChosenPos;
+
+private slots:
+    void catchChosenPiece(QPointF oldPos);
     
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 };
 
 #endif // CHESSBOARD_H

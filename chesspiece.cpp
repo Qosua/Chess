@@ -48,6 +48,8 @@ void ChessPiece::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         m_previosPos = event->scenePos();
         m_previosPos.setX(int(m_previosPos.x()/m_cellSize)*m_cellSize);
         m_previosPos.setY(int(m_previosPos.y()/m_cellSize)*m_cellSize);
+
+        emit pieceIsChosen(m_previosPos);
         
         this->setCursor(Qt::ClosedHandCursor);
         QGraphicsPixmapItem::mousePressEvent(event);
@@ -64,7 +66,7 @@ void ChessPiece::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         
         m_newPos.setX(int(m_newPos.x()/m_cellSize)*m_cellSize);
         m_newPos.setY(int(m_newPos.y()/m_cellSize)*m_cellSize);
-        
+
         emit newPosition(m_newPos, m_previosPos);
         
         this->unsetCursor();

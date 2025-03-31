@@ -53,6 +53,7 @@ void ChessBoard::drawPieces() {
         elem->setGraphicsEffect(blur);
         
         connect(elem, &ChessPiece::newPosition, this, &ChessBoard::validateTurn);
+        connect(elem, &ChessPiece::pieceIsChosen, this, &ChessBoard::catchChosenPiece);
         
         this->addItem(elem);
             
@@ -226,6 +227,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             (delta.x() == -1 and (delta.y() == 2 or delta.y() == -2)) or
             (delta.x() == -2 and (delta.y() == 1 or delta.y() == -1))){
             senderPiece->setPos(newPos);
+            m_lastChosenPiece = nullptr;
             qDebug() << "Horse";
         }
         else
@@ -238,7 +240,48 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
         if(std::abs(delta.x()) <= 1 and std::abs(delta.y()) <= 1){
             senderPiece->setPos(newPos);
+            m_lastChosenPiece = nullptr;
             qDebug() << "King";
+        }
+        else
+            senderPiece->setPos(oldPos);
+
+
+    } break;
+
+    case PieceType::bishop:{
+
+        if(std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1){
+            senderPiece->setPos(newPos);
+            m_lastChosenPiece = nullptr;
+            qDebug() << "bishop";
+        }
+        else
+            senderPiece->setPos(oldPos);
+
+
+    } break;
+
+    case PieceType::rook:{
+
+        if(delta.x() == 0 or delta.y() == 0){
+            senderPiece->setPos(newPos);
+            m_lastChosenPiece = nullptr;
+            qDebug() << "rook";
+        }
+        else
+            senderPiece->setPos(oldPos);
+
+
+    } break;
+
+    case PieceType::queen:{
+
+        if((std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1) or
+            (delta.x() == 0 or delta.y() == 0)){
+            senderPiece->setPos(newPos);
+            m_lastChosenPiece = nullptr;
+            qDebug() << "queen";
         }
         else
             senderPiece->setPos(oldPos);
@@ -250,6 +293,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
         if(delta.x() == 0 and (delta.y() == 1 or (senderPiece->getTurnsCount() == 0 and delta.y() == 2))){
             senderPiece->setPos(newPos);
+            m_lastChosenPiece = nullptr;
             senderPiece->plusOneToTurn();
             qDebug() << "white pawn";
         }
@@ -263,6 +307,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
         if(delta.x() == 0 and (delta.y() == -1 or (senderPiece->getTurnsCount() == 0 and delta.y() == -2))){
             senderPiece->setPos(newPos);
+            m_lastChosenPiece = nullptr;
             senderPiece->plusOneToTurn();
             qDebug() << "black pawn";
         }
@@ -277,6 +322,29 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
     } break;
 
     }
+
+}
+
+void ChessBoard::catchChosenPiece(QPointF oldPos) {
+
+    m_lastChosenPiece = qobject_cast<ChessPiece*>(QObject::sender());
+    m_lastChosenPos = oldPos;
+
+}
+
+void ChessBoard::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+
+    if(m_lastChosenPiece != nullptr) {
+
+        QPointF newPos = event->scenePos();
+        newPos.setX(int(newPos.x()/80)*80);
+        newPos.setY(int(newPos.y()/80)*80);
+        emit m_lastChosenPiece->newPosition(newPos, m_lastChosenPos);
+
+    }
+
+    QGraphicsScene::mousePressEvent(event);
+
 
 }
 

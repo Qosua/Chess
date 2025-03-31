@@ -36,6 +36,7 @@ public:
     
 signals:
     void newPosition(QPointF newPos, QPointF oldPos);
+    void pieceIsChosen(QPointF oldPos);
     
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
