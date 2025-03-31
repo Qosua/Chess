@@ -100,7 +100,10 @@ void ClassicalChessWidget::startMatch() {
     
     m_ui->graphicsView->setScene(m_board);
     m_ui->graphicsView->scene()->setSceneRect(QRect(0,0, 640,640));
-    m_ui->graphicsView->fitInView(m_ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+
+    if(m_ui->graphicsView->scene() != nullptr){
+        m_ui->graphicsView->fitInView(m_ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    }
     
 }
 void ClassicalChessWidget::connectToHost() {

@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_mainLayout->setStackingMode(QStackedLayout::StackOne);
 
     this->establishingConnections();
-    
+
     this->setCentralWidget(m_centralWidget);
     this->resize(1280, 720);
     

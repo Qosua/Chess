@@ -6,6 +6,8 @@ ChessPiece::ChessPiece(const QString& path, const int cellSize) {
     pix.scaled(cellSize,cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     this->setPixmap(pix);
     this->setFlag(QGraphicsPixmapItem::ItemIsMovable);
+    m_cellSize = cellSize;
+    m_turnsCount = 0;
     
 }
 
@@ -31,19 +33,27 @@ bool ChessPiece::getPieceColor(){
     return m_pieceColor;
 }
 
+int ChessPiece::getTurnsCount() {
+    return m_turnsCount;
+}
+
+void ChessPiece::plusOneToTurn() {
+    m_turnsCount += 1;
+}
+
 void ChessPiece::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     
     if(event->button() == Qt::MouseButton::LeftButton){
         
         m_previosPos = event->scenePos();
-        m_previosPos.setX(int(m_previosPos.x()/80)*80);
-        m_previosPos.setY(int(m_previosPos.y()/80)*80);
+        m_previosPos.setX(int(m_previosPos.x()/m_cellSize)*m_cellSize);
+        m_previosPos.setY(int(m_previosPos.y()/m_cellSize)*m_cellSize);
         
         this->setCursor(Qt::ClosedHandCursor);
         QGraphicsPixmapItem::mousePressEvent(event);
         
     }
-    
+
 }
 
 void ChessPiece::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
@@ -52,8 +62,8 @@ void ChessPiece::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         
         QPointF m_newPos = event->scenePos();
         
-        m_newPos.setX(int(m_newPos.x()/80)*80);
-        m_newPos.setY(int(m_newPos.y()/80)*80);
+        m_newPos.setX(int(m_newPos.x()/m_cellSize)*m_cellSize);
+        m_newPos.setY(int(m_newPos.y()/m_cellSize)*m_cellSize);
         
         emit newPosition(m_newPos, m_previosPos);
         

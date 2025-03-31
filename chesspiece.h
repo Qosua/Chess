@@ -19,7 +19,7 @@ enum PieceType{
     
 };
 
-class ChessPiece : public QObject, public QGraphicsPixmapItem{
+class ChessPiece : public QObject, public QGraphicsPixmapItem {
     
     Q_OBJECT
     
@@ -31,18 +31,23 @@ public:
     PieceType getType();
     void setPieceColor(bool color);
     bool getPieceColor();
+    int getTurnsCount();
+    void plusOneToTurn();
     
 signals:
-    
     void newPosition(QPointF newPos, QPointF oldPos);
     
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    //void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     
+private:
     PieceType m_type;
     QPointF m_previosPos;
     bool m_pieceColor;
+    int m_cellSize;
+    int m_turnsCount;
     
 };
 

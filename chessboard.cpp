@@ -47,7 +47,7 @@ void ChessBoard::drawPieces() {
     
     for(ChessPiece* elem : m_piecesArr) {
             
-        elem->setScale(0.54);
+        elem->setScale(0.54); //80/180
         QGraphicsBlurEffect *blur = new QGraphicsBlurEffect();
         blur->setBlurRadius(1);
         elem->setGraphicsEffect(blur);
@@ -185,11 +185,11 @@ void ChessBoard::preparePieces() {
 void ChessBoard::validateTurn(QPointF newPos, QPointF oldPos) {
     
     ChessPiece* senderPiece = qobject_cast<ChessPiece*>(QObject::sender());
-    
+
+    //Dont eat your ally
     ChessPiece* pieceOnPos = nullptr;
-    
-    
-    for(auto* elem : m_piecesArr){
+
+    for(auto* elem : m_piecesArr) {
         
         if(elem == nullptr)
             continue;
@@ -199,17 +199,85 @@ void ChessBoard::validateTurn(QPointF newPos, QPointF oldPos) {
             break;
         }
     }
-    
+
     if(pieceOnPos == nullptr or pieceOnPos->getPieceColor() != senderPiece->getPieceColor()){
-        
-        senderPiece->setPos(newPos);
+
+        //Check possibility of move by certain type of piece
+        validateTurnWithType(newPos, oldPos, senderPiece);
     }
-    
     else{
         senderPiece->setPos(oldPos);
         
     }
-    
+
+}
+
+void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece* senderPiece) {
+
+    QPointF delta = newPos - oldPos;
+    delta /= 80;
+    delta.setY(delta.y()*-1);
+    switch(senderPiece->getType()){
+
+    case PieceType::knight:{
+
+        if( (delta.x() == 1 and (delta.y() == 2 or delta.y() == -2)) or
+            (delta.x() == 2 and (delta.y() == 1 or delta.y() == -1)) or
+            (delta.x() == -1 and (delta.y() == 2 or delta.y() == -2)) or
+            (delta.x() == -2 and (delta.y() == 1 or delta.y() == -1))){
+            senderPiece->setPos(newPos);
+            qDebug() << "Horse";
+        }
+        else
+            senderPiece->setPos(oldPos);
+
+
+    } break;
+
+    case PieceType::king:{
+
+        if(std::abs(delta.x()) <= 1 and std::abs(delta.y()) <= 1){
+            senderPiece->setPos(newPos);
+            qDebug() << "King";
+        }
+        else
+            senderPiece->setPos(oldPos);
+
+
+    } break;
+
+    case PieceType::whitePawn:{
+
+        if(delta.x() == 0 and (delta.y() == 1 or (senderPiece->getTurnsCount() == 0 and delta.y() == 2))){
+            senderPiece->setPos(newPos);
+            senderPiece->plusOneToTurn();
+            qDebug() << "white pawn";
+        }
+        else
+            senderPiece->setPos(oldPos);
+
+
+    } break;
+
+    case PieceType::blackPawn:{
+
+        if(delta.x() == 0 and (delta.y() == -1 or (senderPiece->getTurnsCount() == 0 and delta.y() == -2))){
+            senderPiece->setPos(newPos);
+            senderPiece->plusOneToTurn();
+            qDebug() << "black pawn";
+        }
+        else
+            senderPiece->setPos(oldPos);
+
+
+    } break;
+
+    default:{
+        senderPiece->setPos(oldPos);
+    } break;
+
+    }
+
 }
 
 

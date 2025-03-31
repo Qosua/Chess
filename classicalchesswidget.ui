@@ -100,7 +100,7 @@ QLabel{
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="matchMaker">
       <layout class="QHBoxLayout" name="horizontalLayout" stretch="6,7,6">
