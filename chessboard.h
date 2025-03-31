@@ -26,6 +26,7 @@ private:
     void validateTurn(QPointF newPos, QPointF oldPos);
     void validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece* senderPiece);
     void scaleScene();
+    void changeCellColorAt(QPointF pos, bool isActivated);
     
     size_t m_cellSize = 80;
     std::vector<ChessPiece*> m_piecesArr;

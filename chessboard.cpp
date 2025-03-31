@@ -325,11 +325,37 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
 }
 
+void ChessBoard::changeCellColorAt(QPointF pos, bool isActivated) {
+    
+    QGraphicsRectItem* rect = qgraphicsitem_cast<QGraphicsRectItem*>(this->itemAt(pos, QTransform()));
+    
+    QPointF posCopy = pos;
+    //QPointF pos = rect->scenePos(); //Why it doesnt work?
+    posCopy.setX(int(posCopy.x()/80));
+    posCopy.setY(int(posCopy.y()/80));
+    
+    if(int(posCopy.x() + posCopy.y()) % 2 != 0)
+        if(isActivated)
+            rect->setBrush(QBrush(QColor(185, 202, 67)));
+        else
+            rect->setBrush(QBrush(QColor(115,149,82)));
+    
+    else
+        if(isActivated)
+            rect->setBrush(QBrush(QColor(245, 246, 130)));
+        else
+            rect->setBrush(QBrush(QColor(235,236,208)));
+}
+
 void ChessBoard::catchChosenPiece(QPointF oldPos) {
+    
+    changeCellColorAt(m_lastChosenPos, false);
 
     m_lastChosenPiece = qobject_cast<ChessPiece*>(QObject::sender());
     m_lastChosenPos = oldPos;
-
+    
+    changeCellColorAt(m_lastChosenPos, true);
+    
 }
 
 void ChessBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
@@ -353,7 +379,14 @@ void ChessBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         
             emit m_lastChosenPiece->newPosition(newPos, m_lastChosenPos);
             m_lastChosenPiece = nullptr;
+            
+            changeCellColorAt(m_lastChosenPos, false);
         
+        }
+        else{
+            
+            m_lastChosenPiece->setPos(m_lastChosenPos);
+            
         }
 
     }
