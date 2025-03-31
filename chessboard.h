@@ -36,7 +36,7 @@ private slots:
     void catchChosenPiece(QPointF oldPos);
     
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 };
 

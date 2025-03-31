@@ -43,11 +43,14 @@ void ChessPiece::plusOneToTurn() {
 
 void ChessPiece::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     
+    qDebug() << "Piece has been pressed";
     if(event->button() == Qt::MouseButton::LeftButton){
         
         m_previosPos = event->scenePos();
         m_previosPos.setX(int(m_previosPos.x()/m_cellSize)*m_cellSize);
         m_previosPos.setY(int(m_previosPos.y()/m_cellSize)*m_cellSize);
+        
+        //this->setY(this->y() - 10);
 
         emit pieceIsChosen(m_previosPos);
         
@@ -60,16 +63,20 @@ void ChessPiece::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 void ChessPiece::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     
+    //qDebug() << "Piece has been released 1";
     if(event->button() == Qt::MouseButton::LeftButton){
         
-        QPointF m_newPos = event->scenePos();
+        // QPointF m_newPos = event->scenePos();
         
-        m_newPos.setX(int(m_newPos.x()/m_cellSize)*m_cellSize);
-        m_newPos.setY(int(m_newPos.y()/m_cellSize)*m_cellSize);
+        // m_newPos.setX(int(m_newPos.x()/m_cellSize)*m_cellSize);
+        // m_newPos.setY(int(m_newPos.y()/m_cellSize)*m_cellSize);
+        
+        // qDebug() << "Piece has been released 2 " << m_newPos;
 
-        emit newPosition(m_newPos, m_previosPos);
+        // emit newPosition(m_newPos, m_previosPos);
         
-        this->unsetCursor();
+        // this->unsetCursor();
+        
         QGraphicsPixmapItem::mouseReleaseEvent(event);
         
     }

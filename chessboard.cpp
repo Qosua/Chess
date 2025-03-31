@@ -200,7 +200,7 @@ void ChessBoard::validateTurn(QPointF newPos, QPointF oldPos) {
             break;
         }
     }
-
+        
     if(pieceOnPos == nullptr or pieceOnPos->getPieceColor() != senderPiece->getPieceColor()){
 
         //Check possibility of move by certain type of piece
@@ -332,18 +332,33 @@ void ChessBoard::catchChosenPiece(QPointF oldPos) {
 
 }
 
-void ChessBoard::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-
+void ChessBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+    
+    if(event->button() != Qt::LeftButton){
+        QGraphicsScene::mouseReleaseEvent(event);
+        return;
+    }
+        
+        
+    qDebug() << "Mouse on scene released";
     if(m_lastChosenPiece != nullptr) {
+        
+        qDebug() << "m_lastChosenPiece not nullptr";
 
         QPointF newPos = event->scenePos();
         newPos.setX(int(newPos.x()/80)*80);
         newPos.setY(int(newPos.y()/80)*80);
-        emit m_lastChosenPiece->newPosition(newPos, m_lastChosenPos);
+        
+        if(newPos != m_lastChosenPos){
+        
+            emit m_lastChosenPiece->newPosition(newPos, m_lastChosenPos);
+            m_lastChosenPiece = nullptr;
+        
+        }
 
     }
 
-    QGraphicsScene::mousePressEvent(event);
+    QGraphicsScene::mouseReleaseEvent(event);
 
 
 }
