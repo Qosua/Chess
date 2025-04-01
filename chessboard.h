@@ -27,11 +27,12 @@ private:
     void preparePieces();
     void validateTurn(QPointF newPos, QPointF oldPos);
     void validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece* senderPiece);
-    void scaleScene();
     void changeCellColorAt(QPointF pos, bool isActivated);
     int abs(int num);
     void highlightTips(ChessPiece* senderPiece);
+    void deleteTips();
     ChessPiece* findPeiceOnCoords(QPointF pos);
+    void drawTipAt(qreal x, qreal y);
     
     size_t m_cellSize = 80;
     std::vector<ChessPiece*> m_piecesArr;
