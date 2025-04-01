@@ -69,7 +69,7 @@ void ClassicalChessWidget::establishingConnections() {
         
     });
     connect(m_ui->startMatch, &QPushButton::clicked, this, &ClassicalChessWidget::startMatch);
-    connect(m_ui->connectToHost, &QPushButton::clicked, this, &ClassicalChessWidget::connectToHost);
+    connect(m_ui->connectToHost, &QPushButton::clicked, this, &ClassicalChessWidget::connectToMatch);
     
 }
 
@@ -96,6 +96,7 @@ void ClassicalChessWidget::startMatch() {
     m_ui->stackedWidget->setCurrentIndex(1);
     
     m_board = new ChessBoard;
+    m_board->setPlayerSide((m_choosenSide == 1 ? true : false));
     m_board->setupBoard();
     
     m_ui->graphicsView->setScene(m_board);
@@ -106,7 +107,8 @@ void ClassicalChessWidget::startMatch() {
     }
     
 }
-void ClassicalChessWidget::connectToHost() {
+
+void ClassicalChessWidget::connectToMatch() {
     
     if(m_ui->ipLine->text().isEmpty()){
         m_ui->infoLabel_2->setText("You need to enter IP address");

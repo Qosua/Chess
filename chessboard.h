@@ -18,6 +18,8 @@ public:
     ~ChessBoard();
     
     void setupBoard();
+    void setPlayerSide(bool side);
+    bool getPlayerSide();
     
 private:
     void drawField();
@@ -27,11 +29,15 @@ private:
     void validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece* senderPiece);
     void scaleScene();
     void changeCellColorAt(QPointF pos, bool isActivated);
+    int abs(int num);
+    void highlightTips(ChessPiece* senderPiece);
+    ChessPiece* findPeiceOnCoords(QPointF pos);
     
     size_t m_cellSize = 80;
     std::vector<ChessPiece*> m_piecesArr;
     ChessPiece* m_lastChosenPiece = nullptr;
     QPointF m_lastChosenPos;
+    bool m_playerSide = true;
 
 private slots:
     void catchChosenPiece(QPointF oldPos);

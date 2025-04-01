@@ -27,7 +27,7 @@ private:
     
     void establishingConnections();
     void startMatch();
-    void connectToHost();
+    void connectToMatch();
     
 protected:
     void resizeEvent(QResizeEvent *event);

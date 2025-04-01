@@ -53,7 +53,8 @@ void ChessPiece::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         emit pieceIsChosen(m_previosPos);
         
         //only for visual
-        this->setY(this->y() - 8);
+        QPointF cellCenter = m_previosPos + QPointF(m_cellSize/2, m_cellSize/2);
+        this->setPos(this->pos() - (cellCenter - event->scenePos()));
         this->setCursor(Qt::ClosedHandCursor);
         
         QGraphicsPixmapItem::mousePressEvent(event);
