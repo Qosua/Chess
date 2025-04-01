@@ -5,6 +5,7 @@ ChessBoard::ChessBoard() {
 
     
 }
+
 ChessBoard::~ChessBoard() {
     
     
@@ -217,6 +218,7 @@ void ChessBoard::validateTurn(QPointF newPos, QPointF oldPos) {
         validateTurnWithType(newPos, oldPos, senderPiece);
     }
     else{
+
         senderPiece->setPos(oldPos);
         
     }
@@ -375,7 +377,7 @@ int ChessBoard::abs(int num) {
 
 void ChessBoard::highlightTips(ChessPiece *senderPiece) {
 
-    switch(senderPiece->getType()){
+    switch(senderPiece->getType()) {
 
     case PieceType::blackPawn:{
         for(int i = 1; i < 3; ++i){
@@ -385,12 +387,16 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
 
             if(piece == nullptr) {
 
-                changeCellColorAt(QPointF(pieceCoord.x(), pieceCoord.y() - i*80), true);
+                QGraphicsEllipseItem* tip = new QGraphicsEllipseItem(pieceCoord.x(), pieceCoord.y() - i*80, 20, 20);
+                tip->setBrush(QBrush(QColor(40,40,40,0.5)));
+                m_tipsArr.push_back(tip);
 
             }
             else {
 
-                changeCellColorAt(QPointF(pieceCoord.x(), pieceCoord.y() - i*80), true);
+                QGraphicsEllipseItem* tip = new QGraphicsEllipseItem(pieceCoord.x(), pieceCoord.y() - i*80, 20, 20);
+                tip->setBrush(QBrush(QColor(40,40,40,0.5)));
+                m_tipsArr.push_back(tip);
                 break;
 
             }
@@ -404,14 +410,23 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
             QPointF pieceCoord =senderPiece->scenePos();
             ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - i*80));
 
+            qDebug() << pieceCoord;
             if(piece == nullptr) {
 
-                changeCellColorAt(QPointF(pieceCoord.x(), pieceCoord.y() - i*80), true);
+                QGraphicsEllipseItem* tip = new QGraphicsEllipseItem;
+                tip->setPos(pieceCoord.x() + m_cellSize/2, pieceCoord.y() - i*80 + m_cellSize/2);
+                tip->setRect(0,0,40,40);
+                tip->setBrush(QBrush(QColor(40,40,40,0.5)));
+                m_tipsArr.push_back(tip);
 
             }
             else {
 
-                changeCellColorAt(QPointF(pieceCoord.x(), pieceCoord.y() - i*80), true);
+                QGraphicsEllipseItem* tip = new QGraphicsEllipseItem;
+                tip->setPos(pieceCoord.x() + m_cellSize/2, pieceCoord.y() - i*80 + m_cellSize/2);
+                tip->setRect(0,0,40,40);
+                tip->setBrush(QBrush(QColor(40,40,40,0.5)));
+                m_tipsArr.push_back(tip);
                 break;
 
             }
@@ -422,6 +437,17 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
     defualt:{
 
     }break;
+
+    }
+
+    for(QGraphicsEllipseItem* elem : m_tipsArr) {
+
+        elem->setScale(0.54); //80/180
+        QGraphicsBlurEffect *blur = new QGraphicsBlurEffect();
+        blur->setBlurRadius(1);
+        elem->setGraphicsEffect(blur);
+
+        this->addItem(elem);
 
     }
 
@@ -480,6 +506,8 @@ void ChessBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
             m_lastChosenPiece = nullptr;
             
             changeCellColorAt(m_lastChosenPos, false);
+
+            //Here We lose piece focus
         
         }
         else{

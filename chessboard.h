@@ -38,6 +38,7 @@ private:
     ChessPiece* m_lastChosenPiece = nullptr;
     QPointF m_lastChosenPos;
     bool m_playerSide = true;
+    std::vector<QGraphicsEllipseItem*> m_tipsArr;
 
 private slots:
     void catchChosenPiece(QPointF oldPos);
