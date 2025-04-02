@@ -8,7 +8,13 @@ ChessBoard::ChessBoard() {
 
 ChessBoard::~ChessBoard() {
     
+    delete m_lastChosenPiece;
+    m_lastChosenPiece = nullptr;
     
+    for(ChessPiece* elem : m_piecesArr)
+        delete elem;
+    
+    m_piecesArr.clear();
     
 }
 
@@ -800,7 +806,7 @@ void ChessBoard::deleteTips() {
     
 }
 
-ChessPiece *ChessBoard::findPeiceOnCoords(QPointF pos) {
+ChessPiece* ChessBoard::findPeiceOnCoords(QPointF pos) {
 
     ChessPiece* ans = nullptr;
 
