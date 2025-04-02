@@ -210,6 +210,11 @@ void ChessBoard::preparePieces() {
 void ChessBoard::validateTurn(QPointF newPos, QPointF oldPos) {
     
     ChessPiece* senderPiece = qobject_cast<ChessPiece*>(QObject::sender());
+    
+    if(!(newPos.x() >= 0 and newPos.x() <= m_cellSize*7 and newPos.y() >= 0 and newPos.y() <= m_cellSize*7)){
+        senderPiece->setPos(oldPos);
+        return;
+    }
 
     //Dont eat your ally
     ChessPiece* pieceOnPos = nullptr;
