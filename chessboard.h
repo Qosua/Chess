@@ -33,6 +33,7 @@ private:
     void deleteTips();
     ChessPiece* findPeiceOnCoords(QPointF pos);
     void drawTipAt(qreal x, qreal y);
+    bool isPieceOnWay(QPointF oldPos, QPointF newPos);
     
     size_t m_cellSize = 80;
     std::vector<ChessPiece*> m_piecesArr;

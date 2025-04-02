@@ -33,8 +33,8 @@ public:
     bool getPieceColor();
     int getTurnsCount();
     void plusOneToTurn();
-    void setMovebleColor(bool movebleColor);
-    bool getMovebleColor();
+    void setMoveFlag(bool moveFlag);
+    bool getMoveFlag();
     
 signals:
     void newPosition(QPointF newPos, QPointF oldPos);
@@ -49,7 +49,7 @@ private:
     bool m_pieceColor;
     int m_cellSize;
     int m_turnsCount;
-    bool m_movebleColor;
+    bool m_moveFlag;
     
 };
 

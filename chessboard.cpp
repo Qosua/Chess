@@ -56,7 +56,7 @@ void ChessBoard::drawPieces() {
     
     for(ChessPiece* elem : m_piecesArr) {
 
-        elem->setMovebleColor((m_playerSide == elem->getPieceColor() ? true : false));
+        elem->setMoveFlag((m_playerSide == elem->getPieceColor() ? true : false));
         elem->setScale(0.54); //80/180
         QGraphicsBlurEffect *blur = new QGraphicsBlurEffect();
         blur->setBlurRadius(1);
@@ -74,8 +74,8 @@ void ChessBoard::drawPieces() {
 void ChessBoard::preparePieces() {
     
     m_piecesArr.reserve(32);
-
-    int inversCoords = m_playerSide ? 0 : m_cellSize*(8-1);
+    
+    int inversCoords = m_playerSide ? 0 : 7*m_cellSize;
     
     for(int i = 0; i < 8; ++i){
         
@@ -278,8 +278,8 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
     } break;
 
     case PieceType::bishop:{
-
-        if(std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1){
+        
+        if(std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1 and !isPieceOnWay(oldPos, newPos)) {
             senderPiece->setPos(newPos);
             m_lastChosenPiece = nullptr;
             qDebug() << "bishop";
@@ -292,7 +292,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
     case PieceType::rook:{
 
-        if(delta.x() == 0 or delta.y() == 0){
+        if((delta.x() == 0 or delta.y() == 0) and !isPieceOnWay(oldPos, newPos)){
             senderPiece->setPos(newPos);
             m_lastChosenPiece = nullptr;
             qDebug() << "rook";
@@ -305,8 +305,8 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
     case PieceType::queen:{
 
-        if((std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1) or
-            (delta.x() == 0 or delta.y() == 0)){
+        if(!isPieceOnWay(oldPos, newPos) and ((std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1) or
+            (delta.x() == 0 or delta.y() == 0))){
             senderPiece->setPos(newPos);
             m_lastChosenPiece = nullptr;
             qDebug() << "queen";
@@ -319,8 +319,8 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
     case PieceType::whitePawn:{
 
-        if(delta.x() == 0 and (delta.y() == reverseForPawn*1 or
-          (senderPiece->getTurnsCount() == 0 and delta.y() == reverseForPawn*2))) {
+        if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
+           (delta.y() == reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == reverseForPawn*2)))) {
 
             senderPiece->setPos(newPos);
             m_lastChosenPiece = nullptr;
@@ -335,8 +335,8 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
     case PieceType::blackPawn:{
 
-        if(delta.x() == 0 and (delta.y() == -1*reverseForPawn or
-          (senderPiece->getTurnsCount() == 0 and delta.y() == -2*reverseForPawn))) {
+        if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and (delta.y() == -1*reverseForPawn or
+          (senderPiece->getTurnsCount() == 0 and delta.y() == -2*reverseForPawn)))) {
 
             senderPiece->setPos(newPos);
             m_lastChosenPiece = nullptr;
@@ -407,8 +407,9 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
 
             }
             else {
-
-                drawTipAt(pieceCoord.x(), pieceCoord.y() + reverse*i*80);
+                
+                if(piece->getPieceColor() != senderPiece->getPieceColor())
+                    drawTipAt(pieceCoord.x(), pieceCoord.y() + reverse*i*80);
                 break;
 
             }
@@ -431,8 +432,9 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
 
             }
             else {
-
-                drawTipAt(pieceCoord.x(), pieceCoord.y() - reverse*i*80);
+                
+                if(piece->getPieceColor() != senderPiece->getPieceColor())
+                    drawTipAt(pieceCoord.x(), pieceCoord.y() - reverse*i*80);
                 break;
 
             }
@@ -816,9 +818,32 @@ void ChessBoard::drawTipAt(qreal x, qreal y) {
     QGraphicsEllipseItem* tip = new QGraphicsEllipseItem;
     tip->setPos(x + m_cellSize/3 + 3, y + m_cellSize/3 + 3);
     tip->setRect(0,0,m_cellSize/1.5 - 10,m_cellSize/1.5 - 10);
-    tip->setBrush(QBrush(QColor(40,40,40, 70)));
-    tip->setPen(QColor(40,40,40, 70));
+    tip->setBrush(QBrush(QColor(40,40,40,70)));
+    tip->setPen(QColor(40,40,40,70));
     m_tipsArr.push_back(tip);
+    
+}
+
+bool ChessBoard::isPieceOnWay(QPointF oldPos, QPointF newPos) {
+    
+    bool ansFlag = false;
+    qreal dx = newPos.x() - oldPos.x();
+    qreal dy = newPos.y() - oldPos.y();
+    int stepCount = std::max(abs(dx/m_cellSize), abs(dy/m_cellSize));
+    
+    QPointF deltaStep;
+    deltaStep.setX(dx/stepCount);
+    deltaStep.setY(dy/stepCount);
+    
+    for(int i = 1; i < stepCount; ++i){
+        
+        if(findPeiceOnCoords(oldPos + i * deltaStep) != nullptr)
+            ansFlag = true;
+        
+    }
+    
+    qDebug() << ansFlag << "-is piece on way";
+    return ansFlag;
     
 }
 

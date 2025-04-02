@@ -7,10 +7,6 @@ ChessPiece::ChessPiece(const QString& path, const int cellSize) {
     this->setPixmap(pix);
     m_cellSize = cellSize;
     m_turnsCount = 0;
-
-    if(m_pieceColor == m_movebleColor)
-        this->setFlag(QGraphicsPixmapItem::ItemIsMovable);
-
     
 }
 
@@ -29,7 +25,9 @@ PieceType ChessPiece::getType() {
 }
 
 void ChessPiece::setPieceColor(bool color) {
+    
     m_pieceColor = color;
+    
 }
 
 bool ChessPiece::getPieceColor(){
@@ -44,22 +42,25 @@ void ChessPiece::plusOneToTurn() {
     m_turnsCount += 1;
 }
 
-void ChessPiece::setMovebleColor(bool movebleColor) {
+void ChessPiece::setMoveFlag(bool moveFlag) {
 
-    m_movebleColor = movebleColor;
+    m_moveFlag = moveFlag;
+    
+    if(m_moveFlag == true)
+        this->setFlag(QGraphicsPixmapItem::ItemIsMovable);
 
 }
 
-bool ChessPiece::getMovebleColor() {
+bool ChessPiece::getMoveFlag() {
 
-    return m_movebleColor;
+    return m_moveFlag;
 
 }
 
 void ChessPiece::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
-    if(m_movebleColor != m_pieceColor)
-        //return;
+    if(m_moveFlag != true)
+        return;
     
     qDebug() << "Piece has been pressed";
     if(event->button() == Qt::MouseButton::LeftButton){
