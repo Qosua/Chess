@@ -33,6 +33,8 @@ public:
     bool getPieceColor();
     int getTurnsCount();
     void plusOneToTurn();
+    void setMovebleColor(bool movebleColor);
+    bool getMovebleColor();
     
 signals:
     void newPosition(QPointF newPos, QPointF oldPos);
@@ -40,7 +42,6 @@ signals:
     
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     
 private:
     PieceType m_type;
@@ -48,6 +49,7 @@ private:
     bool m_pieceColor;
     int m_cellSize;
     int m_turnsCount;
+    bool m_movebleColor;
     
 };
 

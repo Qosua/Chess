@@ -55,7 +55,8 @@ void ChessBoard::drawField() {
 void ChessBoard::drawPieces() {
     
     for(ChessPiece* elem : m_piecesArr) {
-            
+
+        elem->setMovebleColor((m_playerSide == elem->getPieceColor() ? true : false));
         elem->setScale(0.54); //80/180
         QGraphicsBlurEffect *blur = new QGraphicsBlurEffect();
         blur->setBlurRadius(1);
@@ -169,25 +170,37 @@ void ChessBoard::preparePieces() {
     
     //queen and king
     ChessPiece* piece13 = new ChessPiece(":/icons/wk.png", m_cellSize);
-    piece13->setPos(3*m_cellSize,abs(inversCoords - 7*m_cellSize));
+    if(inversCoords == 0)
+        piece13->setPos(4*m_cellSize,7*m_cellSize);
+    else
+        piece13->setPos(4*m_cellSize,abs(inversCoords - 7*m_cellSize));
     piece13->setPieceColor(true);
     piece13->setType(PieceType::king);
     m_piecesArr.push_back(piece13);
     
     ChessPiece* piece14 = new ChessPiece(":/icons/wq.png", m_cellSize);
-    piece14->setPos(4*m_cellSize,abs(inversCoords - 7*m_cellSize));
+    if(inversCoords == 0)
+        piece14->setPos(3*m_cellSize,7*m_cellSize);
+    else
+        piece14->setPos(3*m_cellSize,abs(inversCoords - 7*m_cellSize));
     piece14->setPieceColor(true);
     piece14->setType(PieceType::queen);
     m_piecesArr.push_back(piece14);
     
     ChessPiece* piece15 = new ChessPiece(":/icons/bk.png", m_cellSize);
-    piece15->setPos(4*m_cellSize,abs(inversCoords - 0*m_cellSize));
+    if(inversCoords == 0)
+        piece15->setPos(4*m_cellSize,0*m_cellSize);
+    else
+        piece15->setPos(4*m_cellSize,abs(inversCoords - 0*m_cellSize));
     piece15->setPieceColor(false);
     piece15->setType(PieceType::king);
     m_piecesArr.push_back(piece15);
     
     ChessPiece* piece16 = new ChessPiece(":/icons/bq.png", m_cellSize);
-    piece16->setPos(3*m_cellSize,abs(inversCoords - 0*m_cellSize));
+    if(inversCoords == 0)
+        piece16->setPos(3*m_cellSize,0*m_cellSize);
+    else
+        piece16->setPos(3*m_cellSize,abs(inversCoords - 0*m_cellSize));
     piece16->setPieceColor(false);
     piece16->setType(PieceType::queen);
     m_piecesArr.push_back(piece16);
@@ -381,43 +394,45 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
         
     case PieceType::blackPawn:{
         
+        int reverse = m_playerSide ? 1 : -1;
         int moveCount = (senderPiece->getTurnsCount() == 0 ? 3 : 2);
         for(int i = 1; i < moveCount; ++i){
-            
+
             QPointF pieceCoord =senderPiece->scenePos();
-            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + i*80));
-            
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + reverse*i*80));
+
             if(piece == nullptr) {
-                
-                drawTipAt(pieceCoord.x(), pieceCoord.y() + i*80);
-                
+
+                drawTipAt(pieceCoord.x(), pieceCoord.y() + reverse*i*80);
+
             }
             else {
-                
-                drawTipAt(pieceCoord.x(), pieceCoord.y() + i*80);
+
+                drawTipAt(pieceCoord.x(), pieceCoord.y() + reverse*i*80);
                 break;
-                
+
             }
-            
+
         }
     }break;
 
     case PieceType::whitePawn:{
-        
+
+        int reverse = m_playerSide ? 1 : -1;
         int moveCount = (senderPiece->getTurnsCount() == 0 ? 3 : 2);
         for(int i = 1; i < moveCount; ++i){
 
             QPointF pieceCoord =senderPiece->scenePos();
-            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - i*80));
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - reverse*i*80));
 
             if(piece == nullptr) {
 
-                drawTipAt(pieceCoord.x(), pieceCoord.y() - i*80);
+                drawTipAt(pieceCoord.x(), pieceCoord.y() - reverse*i*80);
 
             }
             else {
 
-                drawTipAt(pieceCoord.x(), pieceCoord.y() - i*80);
+                drawTipAt(pieceCoord.x(), pieceCoord.y() - reverse*i*80);
                 break;
 
             }
@@ -512,8 +527,248 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
             drawTipAt(pieceCoord.x(), pieceCoord.y() + m_cellSize);
         
     }break;
-        
-    defualt: break;
+
+    case PieceType::bishop:{
+
+        QPointF pieceCoord = senderPiece->scenePos();
+
+        int counter = std::min(pieceCoord.x()/m_cellSize, pieceCoord.y()/m_cellSize);
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() - i *m_cellSize));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x() - i * m_cellSize, pieceCoord.y() - i * m_cellSize);
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = std::min((m_cellSize*7 - pieceCoord.x())/m_cellSize, pieceCoord.y()/m_cellSize);
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() - i *m_cellSize));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x() + i * m_cellSize, pieceCoord.y() - i * m_cellSize);
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = std::min((m_cellSize*7 - pieceCoord.x())/m_cellSize, (m_cellSize*7 - pieceCoord.y())/m_cellSize);
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() + i *m_cellSize));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x() + i * m_cellSize, pieceCoord.y() + i * m_cellSize);
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = std::min(pieceCoord.x()/m_cellSize, (m_cellSize*7 - pieceCoord.y())/m_cellSize);
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() + i *m_cellSize));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x() - i * m_cellSize, pieceCoord.y() + i * m_cellSize);
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+    }break;
+
+    case PieceType::rook:{
+
+        QPointF pieceCoord = senderPiece->scenePos();
+
+        int counter = pieceCoord.y()/m_cellSize;
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - i *m_cellSize));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x(), pieceCoord.y() - i * m_cellSize);
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = (m_cellSize*7 - pieceCoord.x())/m_cellSize;
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y()));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x() + i * m_cellSize, pieceCoord.y());
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = (m_cellSize*7 - pieceCoord.y())/m_cellSize;
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + i *m_cellSize));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x(), pieceCoord.y() + i * m_cellSize);
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = pieceCoord.x()/m_cellSize;
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y()));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x() - i * m_cellSize, pieceCoord.y());
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+    }break;
+
+    case PieceType::queen:{
+
+        QPointF pieceCoord = senderPiece->scenePos();
+
+        int counter = std::min(pieceCoord.x()/m_cellSize, pieceCoord.y()/m_cellSize);
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() - i *m_cellSize));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x() - i * m_cellSize, pieceCoord.y() - i * m_cellSize);
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = std::min((m_cellSize*7 - pieceCoord.x())/m_cellSize, pieceCoord.y()/m_cellSize);
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() - i *m_cellSize));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x() + i * m_cellSize, pieceCoord.y() - i * m_cellSize);
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = std::min((m_cellSize*7 - pieceCoord.x())/m_cellSize, (m_cellSize*7 - pieceCoord.y())/m_cellSize);
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() + i *m_cellSize));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x() + i * m_cellSize, pieceCoord.y() + i * m_cellSize);
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = std::min(pieceCoord.x()/m_cellSize, (m_cellSize*7 - pieceCoord.y())/m_cellSize);
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() + i *m_cellSize));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x() - i * m_cellSize, pieceCoord.y() + i * m_cellSize);
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = pieceCoord.y()/m_cellSize;
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - i *m_cellSize));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x(), pieceCoord.y() - i * m_cellSize);
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = (m_cellSize*7 - pieceCoord.x())/m_cellSize;
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y()));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x() + i * m_cellSize, pieceCoord.y());
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = (m_cellSize*7 - pieceCoord.y())/m_cellSize;
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + i *m_cellSize));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x(), pieceCoord.y() + i * m_cellSize);
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+        counter = pieceCoord.x()/m_cellSize;
+        for(int i = 1; i < counter + 1; ++i){
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y()));
+
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                drawTipAt(pieceCoord.x() - i * m_cellSize, pieceCoord.y());
+                if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                    i = counter + 1;
+            }
+            else
+                i = counter + 1;
+        }
+
+    }break;
 
     }
 
