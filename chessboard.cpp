@@ -265,6 +265,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             (delta.x() == 2 and (delta.y() == 1 or delta.y() == -1)) or
             (delta.x() == -1 and (delta.y() == 2 or delta.y() == -2)) or
             (delta.x() == -2 and (delta.y() == 1 or delta.y() == -1))){
+            deletePieceAt(newPos);
             senderPiece->setPos(newPos);
             m_lastChosenPiece = nullptr;
             qDebug() << "Horse";
@@ -278,6 +279,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
     case PieceType::king:{
 
         if(std::abs(delta.x()) <= 1 and std::abs(delta.y()) <= 1){
+            deletePieceAt(newPos);
             senderPiece->setPos(newPos);
             m_lastChosenPiece = nullptr;
             qDebug() << "King";
@@ -291,6 +293,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
     case PieceType::bishop:{
         
         if(std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1 and !isPieceOnWay(oldPos, newPos)) {
+            deletePieceAt(newPos);
             senderPiece->setPos(newPos);
             m_lastChosenPiece = nullptr;
             qDebug() << "bishop";
@@ -304,6 +307,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
     case PieceType::rook:{
 
         if((delta.x() == 0 or delta.y() == 0) and !isPieceOnWay(oldPos, newPos)){
+            deletePieceAt(newPos);
             senderPiece->setPos(newPos);
             m_lastChosenPiece = nullptr;
             qDebug() << "rook";
@@ -318,6 +322,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
         if(!isPieceOnWay(oldPos, newPos) and ((std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1) or
             (delta.x() == 0 or delta.y() == 0))){
+            deletePieceAt(newPos);
             senderPiece->setPos(newPos);
             m_lastChosenPiece = nullptr;
             qDebug() << "queen";
@@ -332,7 +337,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
         if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
            (delta.y() == reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == reverseForPawn*2)))) {
-
+            deletePieceAt(newPos);
             senderPiece->setPos(newPos);
             m_lastChosenPiece = nullptr;
             senderPiece->plusOneToTurn();
@@ -348,7 +353,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
         if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and (delta.y() == -1*reverseForPawn or
           (senderPiece->getTurnsCount() == 0 and delta.y() == -2*reverseForPawn)))) {
-
+            deletePieceAt(newPos);
             senderPiece->setPos(newPos);
             m_lastChosenPiece = nullptr;
             senderPiece->plusOneToTurn();
@@ -856,6 +861,18 @@ bool ChessBoard::isPieceOnWay(QPointF oldPos, QPointF newPos) {
     qDebug() << ansFlag << "-is piece on way";
     return ansFlag;
     
+}
+
+void ChessBoard::deletePieceAt(QPointF pos) {
+
+    ChessPiece* piece = findPeiceOnCoords(pos);
+
+    if(piece == nullptr)
+        return;
+
+    m_piecesArr.erase(std::find(m_piecesArr.begin(), m_piecesArr.end(), piece));
+    delete piece;
+
 }
 
 void ChessBoard::catchChosenPiece(QPointF oldPos) {
