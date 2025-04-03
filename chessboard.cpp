@@ -2,8 +2,8 @@
 
 ChessBoard::ChessBoard() {
 
-    //m_sound.setAudioOutput(&m_audioOutput);
-    //m_audioOutput.setVolume(50);
+    m_soundPlayer.setAudioOutput(&m_audioOutput);
+    m_audioOutput.setVolume(50);
     
 }
 
@@ -15,7 +15,11 @@ ChessBoard::~ChessBoard() {
     for(ChessPiece* elem : m_piecesArr)
         delete elem;
     
+    for(QGraphicsEllipseItem* elem : m_tipsArr)
+        delete elem;
+    
     m_piecesArr.clear();
+    m_tipsArr.clear();
     
 }
 
@@ -27,8 +31,8 @@ void ChessBoard::setupBoard(){
     this->update();
     this->setBackgroundBrush(QBrush(QColor(38,37,34)));
 
-    //m_sound.setSource(QUrl(":/sounds/notify.mp3"));
-    //m_sound.play();
+    m_soundPlayer.setSource(QUrl::fromLocalFile(notifySoundPath));
+    m_soundPlayer.play();
     
 }
 
@@ -876,6 +880,9 @@ void ChessBoard::deletePieceAt(QPointF pos) {
 
     m_piecesArr.erase(std::find(m_piecesArr.begin(), m_piecesArr.end(), piece));
     delete piece;
+    
+    m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+    m_soundPlayer.play();
 
 }
 

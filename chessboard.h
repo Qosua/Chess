@@ -46,8 +46,14 @@ private:
     bool m_playerSide = true;
     std::vector<QGraphicsEllipseItem*> m_tipsArr;
 
-    //QMediaPlayer m_sound;
-    //QAudioOutput m_audioOutput;
+    QMediaPlayer m_soundPlayer;
+    QAudioOutput m_audioOutput;
+    
+    QString notifySoundPath = "C:/Repos/Qt/Chess/sounds/notify.mp3";
+    QString moveSoundPath = "C:/Repos/Qt/Chess/sounds/move-self.mp3";
+    QString checkSoundPath = "C:/Repos/Qt/Chess/sounds/move-check.mp3";
+    QString captureSoundPath = "C:/Repos/Qt/Chess/sounds/capture.mp3";
+    QString castleSoundPath = "C:/Repos/Qt/Chess/sounds/castle.mp3";
 
 private slots:
     void catchChosenPiece(QPointF oldPos);
