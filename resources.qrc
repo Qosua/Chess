@@ -13,5 +13,10 @@
         <file>icons/wq.png</file>
         <file>icons/wr.png</file>
         <file>icons/close.png</file>
+        <file>sounds/capture.mp3</file>
+        <file>sounds/castle.mp3</file>
+        <file>sounds/move-check.mp3</file>
+        <file>sounds/move-self.mp3</file>
+        <file>sounds/notify.mp3</file>
     </qresource>
 </RCC>

@@ -1,8 +1,9 @@
 #include "chessboard.h"
 
 ChessBoard::ChessBoard() {
-    
 
+    //m_sound.setAudioOutput(&m_audioOutput);
+    //m_audioOutput.setVolume(50);
     
 }
 
@@ -25,6 +26,9 @@ void ChessBoard::setupBoard(){
     drawPieces();
     this->update();
     this->setBackgroundBrush(QBrush(QColor(38,37,34)));
+
+    //m_sound.setSource(QUrl(":/sounds/notify.mp3"));
+    //m_sound.play();
     
 }
 

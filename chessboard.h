@@ -7,6 +7,9 @@
 #include <vector>
 #include <QGraphicsBlurEffect>
 #include <cmath>
+#include <QMediaPlayer>
+#include <QAudioOutput>
+#include <windows.h>
 
 #include "chesspiece.h"
 
@@ -42,6 +45,9 @@ private:
     QPointF m_lastChosenPos;
     bool m_playerSide = true;
     std::vector<QGraphicsEllipseItem*> m_tipsArr;
+
+    //QMediaPlayer m_sound;
+    //QAudioOutput m_audioOutput;
 
 private slots:
     void catchChosenPiece(QPointF oldPos);
