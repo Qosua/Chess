@@ -886,6 +886,12 @@ void ChessBoard::deletePieceAt(QPointF pos) {
 
 }
 
+void ChessBoard::setCellsUnderAttack() {
+
+
+
+}
+
 void ChessBoard::catchChosenPiece(QPointF oldPos) {
     
     changeCellColorAt(m_lastChosenPos, false);
