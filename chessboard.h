@@ -9,7 +9,6 @@
 #include <cmath>
 #include <QMediaPlayer>
 #include <QAudioOutput>
-#include <set>
 #include <windows.h>
 
 #include "chesspiece.h"
@@ -39,7 +38,8 @@ private:
     void drawTipAt(qreal x, qreal y);
     bool isPieceOnWay(QPointF oldPos, QPointF newPos);
     void deletePieceAt(QPointF pos);
-    void setCellsUnderAttack();
+    void deletePiece(ChessPiece* pieceToDelete);
+    bool isPieceChecked(ChessPiece* pieceToCheck);
     
     size_t m_cellSize = 80;
     std::vector<ChessPiece*> m_piecesArr;
@@ -47,6 +47,8 @@ private:
     QPointF m_lastChosenPos;
     bool m_playerSide = true;
     std::vector<QGraphicsEllipseItem*> m_tipsArr;
+    ChessPiece* m_playerKing;
+    ChessPiece* m_enemyKing;
 
     QMediaPlayer m_soundPlayer;
     QAudioOutput m_audioOutput;
@@ -56,8 +58,6 @@ private:
     QString checkSoundPath = "C:/Repos/Qt/Chess/sounds/move-check.mp3";
     QString captureSoundPath = "C:/Repos/Qt/Chess/sounds/capture.mp3";
     QString castleSoundPath = "C:/Repos/Qt/Chess/sounds/castle.mp3";
-
-    std::set<QPointF> cellsUnderAttack;
 
 private slots:
     void catchChosenPiece(QPointF oldPos);

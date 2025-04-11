@@ -219,6 +219,19 @@ void ChessBoard::preparePieces() {
     piece16->setType(PieceType::queen);
     m_piecesArr.push_back(piece16);
     
+    if(m_playerSide) {
+        m_playerKing = piece13;
+        m_enemyKing = piece15;
+        
+    }
+    else {
+        m_playerKing = piece15;
+        m_enemyKing = piece13;
+        
+        
+    }
+    
+    
 }
 
 void ChessBoard::validateTurn(QPointF newPos, QPointF oldPos) {
@@ -273,8 +286,39 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             (delta.x() == 2 and (delta.y() == 1 or delta.y() == -1)) or
             (delta.x() == -1 and (delta.y() == 2 or delta.y() == -2)) or
             (delta.x() == -2 and (delta.y() == 1 or delta.y() == -1))){
-            deletePieceAt(newPos);
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
             senderPiece->setPos(newPos);
+            if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
+                
+                senderPiece->setPos(oldPos);
+                
+            }
+            else {
+                
+                deletePiece(pieceToDel);
+                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)){
+                        
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                    m_soundPlayer.play();
+                    
+                }
+                else{
+                    if(pieceToDel == nullptr) {
+                        
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                        m_soundPlayer.play();
+                        
+                    }
+                    else {
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                        m_soundPlayer.play();
+                    }
+                }
+                
+            }
+            
             m_lastChosenPiece = nullptr;
             qDebug() << "Horse";
         }
@@ -288,7 +332,39 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
         if(std::abs(delta.x()) <= 1 and std::abs(delta.y()) <= 1){
             deletePieceAt(newPos);
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
             senderPiece->setPos(newPos);
+            if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
+                
+                senderPiece->setPos(oldPos);
+                
+            }
+            else {
+                
+                deletePiece(pieceToDel);
+                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)){
+                    
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                    m_soundPlayer.play();
+                    
+                }
+                else{
+                    if(pieceToDel == nullptr) {
+                        
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                        m_soundPlayer.play();
+                        
+                    }
+                    else {
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                        m_soundPlayer.play();
+                    }
+                }
+                
+            }
+            
             m_lastChosenPiece = nullptr;
             qDebug() << "King";
         }
@@ -302,7 +378,39 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
         
         if(std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1 and !isPieceOnWay(oldPos, newPos)) {
             deletePieceAt(newPos);
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
             senderPiece->setPos(newPos);
+            if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
+                
+                senderPiece->setPos(oldPos);
+                
+            }
+            else {
+                
+                deletePiece(pieceToDel);
+                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)){
+                    
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                    m_soundPlayer.play();
+                    
+                }
+                else{
+                    if(pieceToDel == nullptr) {
+                        
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                        m_soundPlayer.play();
+                        
+                    }
+                    else {
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                        m_soundPlayer.play();
+                    }
+                }
+                
+            }
+            
             m_lastChosenPiece = nullptr;
             qDebug() << "bishop";
         }
@@ -316,7 +424,39 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
         if((delta.x() == 0 or delta.y() == 0) and !isPieceOnWay(oldPos, newPos)){
             deletePieceAt(newPos);
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
             senderPiece->setPos(newPos);
+            if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
+                
+                senderPiece->setPos(oldPos);
+                
+            }
+            else {
+                
+                deletePiece(pieceToDel);
+                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)){
+                    
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                    m_soundPlayer.play();
+                    
+                }
+                else{
+                    if(pieceToDel == nullptr) {
+                        
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                        m_soundPlayer.play();
+                        
+                    }
+                    else {
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                        m_soundPlayer.play();
+                    }
+                }
+                
+            }
+            
             m_lastChosenPiece = nullptr;
             qDebug() << "rook";
         }
@@ -331,7 +471,39 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
         if(!isPieceOnWay(oldPos, newPos) and ((std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1) or
             (delta.x() == 0 or delta.y() == 0))){
             deletePieceAt(newPos);
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
             senderPiece->setPos(newPos);
+            if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
+                
+                senderPiece->setPos(oldPos);
+                
+            }
+            else {
+                
+                deletePiece(pieceToDel);
+                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)){
+                    
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                    m_soundPlayer.play();
+                    
+                }
+                else{
+                    if(pieceToDel == nullptr) {
+                        
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                        m_soundPlayer.play();
+                        
+                    }
+                    else {
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                        m_soundPlayer.play();
+                    }
+                }
+                
+            }
+            
             m_lastChosenPiece = nullptr;
             qDebug() << "queen";
         }
@@ -346,7 +518,40 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
         if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
            (delta.y() == reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == reverseForPawn*2)))) {
             deletePieceAt(newPos);
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
             senderPiece->setPos(newPos);
+            if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
+                
+                senderPiece->setPos(oldPos);
+                return;
+                
+            }
+            else {
+                
+                deletePiece(pieceToDel);
+                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)){
+                    
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                    m_soundPlayer.play();
+                    
+                }
+                else{
+                    if(pieceToDel == nullptr) {
+                        
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                        m_soundPlayer.play();
+                        
+                    }
+                    else {
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                        m_soundPlayer.play();
+                    }
+                }
+                
+            }
+            
             m_lastChosenPiece = nullptr;
             senderPiece->plusOneToTurn();
             qDebug() << "white pawn";
@@ -362,7 +567,40 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
         if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and (delta.y() == -1*reverseForPawn or
           (senderPiece->getTurnsCount() == 0 and delta.y() == -2*reverseForPawn)))) {
             deletePieceAt(newPos);
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
             senderPiece->setPos(newPos);
+            if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
+                
+                senderPiece->setPos(oldPos);
+                return;
+                
+            }
+            else {
+                
+                deletePiece(pieceToDel);
+                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)){
+                    
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                    m_soundPlayer.play();
+                    
+                }
+                else{
+                    if(pieceToDel == nullptr) {
+                        
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                        m_soundPlayer.play();
+                        
+                    }
+                    else {
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                        m_soundPlayer.play();
+                    }
+                }
+                
+            }
+            
             m_lastChosenPiece = nullptr;
             senderPiece->plusOneToTurn();
             qDebug() << "black pawn";
@@ -881,15 +1119,212 @@ void ChessBoard::deletePieceAt(QPointF pos) {
     m_piecesArr.erase(std::find(m_piecesArr.begin(), m_piecesArr.end(), piece));
     delete piece;
     
-    m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
-    m_soundPlayer.play();
+    // m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+    // m_soundPlayer.play();
 
 }
 
-void ChessBoard::setCellsUnderAttack() {
+void ChessBoard::deletePiece(ChessPiece *pieceToDelete) {
+    
+    if(pieceToDelete == nullptr)
+        return;
+    
+    //TODO: write king checking, if king denied deleting and stop game;
+    
+    m_piecesArr.erase(std::find(m_piecesArr.begin(), m_piecesArr.end(), pieceToDelete));
+    delete pieceToDelete;
+    
+    m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+    m_soundPlayer.play();
+    
+}
 
-
-
+bool ChessBoard::isPieceChecked(ChessPiece* pieceToCheck) {
+    
+    bool flag = false;
+    ChessPiece* senderPiece = pieceToCheck;
+    QPointF pieceCoord = senderPiece->scenePos();
+    
+    int counter = std::min(pieceCoord.x()/m_cellSize, pieceCoord.y()/m_cellSize);
+    for(int i = 1; i < counter + 1; ++i){
+        
+        ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() - i *m_cellSize));
+        
+        if(piece == nullptr) continue;
+        if(piece->getPieceColor() != senderPiece->getPieceColor()) {
+            
+            if(piece->getType() == PieceType::queen or piece->getType() == PieceType::bishop)
+                flag = true;
+            else break;
+            
+        }
+        else break;
+    }
+    
+    counter = std::min((m_cellSize*7 - pieceCoord.x())/m_cellSize, pieceCoord.y()/m_cellSize);
+    for(int i = 1; i < counter + 1; ++i){
+        
+        ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() - i *m_cellSize));
+        
+        if(piece == nullptr) continue;
+        if(piece->getPieceColor() != senderPiece->getPieceColor()) {
+            
+            if(piece->getType() == PieceType::queen or piece->getType() == PieceType::bishop)
+                flag = true;
+            else break;
+            
+        }
+        else break;
+    }
+    
+    counter = std::min((m_cellSize*7 - pieceCoord.x())/m_cellSize, (m_cellSize*7 - pieceCoord.y())/m_cellSize);
+    for(int i = 1; i < counter + 1; ++i){
+        
+        ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() + i *m_cellSize));
+        
+        if(piece == nullptr) continue;
+        if(piece->getPieceColor() != senderPiece->getPieceColor()) {
+            
+            if(piece->getType() == PieceType::queen or piece->getType() == PieceType::bishop)
+                flag = true;
+            else break;
+            
+        }
+        else break;
+    }
+    
+    counter = std::min(pieceCoord.x()/m_cellSize, (m_cellSize*7 - pieceCoord.y())/m_cellSize);
+    for(int i = 1; i < counter + 1; ++i){
+        
+        ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() + i *m_cellSize));
+        
+        if(piece == nullptr) continue;
+        if(piece->getPieceColor() != senderPiece->getPieceColor()) {
+            
+            if(piece->getType() == PieceType::queen or piece->getType() == PieceType::bishop)
+                flag = true;
+            else break;
+            
+        }
+        else break;
+    }
+    
+    counter = pieceCoord.y()/m_cellSize;
+    for(int i = 1; i < counter + 1; ++i){
+        
+        ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - i *m_cellSize));
+        
+        if(piece == nullptr) continue;
+        if(piece->getPieceColor() != senderPiece->getPieceColor()) {
+            
+            if(piece->getType() == PieceType::queen or piece->getType() == PieceType::rook)
+                flag = true;
+            else break;
+            
+        }
+        else break;
+    }
+    
+    counter = (m_cellSize*7 - pieceCoord.x())/m_cellSize;
+    for(int i = 1; i < counter + 1; ++i){
+        
+        ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y()));
+        
+        if(piece == nullptr) continue;
+        if(piece->getPieceColor() != senderPiece->getPieceColor()) {
+            
+            if(piece->getType() == PieceType::queen or piece->getType() == PieceType::rook)
+                flag = true;
+            else break;
+            
+        }
+        else break;
+    }
+    
+    counter = (m_cellSize*7 - pieceCoord.y())/m_cellSize;
+    for(int i = 1; i < counter + 1; ++i){
+        
+        ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + i *m_cellSize));
+        
+        if(piece == nullptr) continue;
+        if(piece->getPieceColor() != senderPiece->getPieceColor()) {
+            
+            if(piece->getType() == PieceType::queen or piece->getType() == PieceType::rook)
+                flag = true;
+            else break;
+            
+        }
+        else break;
+    }
+    
+    counter = pieceCoord.x()/m_cellSize;
+    for(int i = 1; i < counter + 1; ++i){
+        
+        ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y()));
+        
+        if(piece == nullptr) continue;
+        if(piece->getPieceColor() != senderPiece->getPieceColor()) {
+            
+            if(piece->getType() == PieceType::queen or piece->getType() == PieceType::rook)
+                flag = true;
+            else break;
+            
+        }
+        else break;
+    }
+    
+    //1 2
+    ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + 2 * m_cellSize));
+    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        if(piece->getType() == PieceType::knight)
+            flag = true;
+    
+    //1 -2
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - 2 * m_cellSize));
+    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        if(piece->getType() == PieceType::knight)
+            flag = true;
+    
+    //2 1
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x() + 2 * m_cellSize, pieceCoord.y() + m_cellSize));
+    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        if(piece->getType() == PieceType::knight)
+            flag = true;        
+    
+    //2 -1
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x() + 2 * m_cellSize, pieceCoord.y() - m_cellSize));
+    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        if(piece->getType() == PieceType::knight)
+            flag = true; 
+    
+    //-1 2
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + 2 * m_cellSize));
+    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        if(piece->getType() == PieceType::knight)
+            flag = true; 
+    
+    //-1 -2
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - 2 * m_cellSize));
+    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        if(piece->getType() == PieceType::knight)
+            flag = true; 
+    
+    //-2 1
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x() - 2 * m_cellSize, pieceCoord.y() + m_cellSize));
+    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        if(piece->getType() == PieceType::knight)
+            flag = true; 
+    
+    //-2 -1
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x() - 2 * m_cellSize, pieceCoord.y() - m_cellSize));
+    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        if(piece->getType() == PieceType::knight)
+            flag = true; 
+    
+    if(flag)
+        qDebug() << "White king checked";
+    
+    return flag;
 }
 
 void ChessBoard::catchChosenPiece(QPointF oldPos) {
