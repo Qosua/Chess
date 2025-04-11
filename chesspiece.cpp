@@ -46,7 +46,7 @@ void ChessPiece::setMoveFlag(bool moveFlag) {
 
     m_moveFlag = moveFlag;
     
-    if(m_moveFlag == true)
+    //if(m_moveFlag == true)
         this->setFlag(QGraphicsPixmapItem::ItemIsMovable);
 
 }
@@ -60,7 +60,7 @@ bool ChessPiece::getMoveFlag() {
 void ChessPiece::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
     if(m_moveFlag != true)
-        return;
+        //return;
     
     qDebug() << "Piece has been pressed";
     if(event->button() == Qt::MouseButton::LeftButton){

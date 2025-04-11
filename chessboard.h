@@ -38,7 +38,7 @@ private:
     void drawTipAt(qreal x, qreal y);
     bool isPieceOnWay(QPointF oldPos, QPointF newPos);
     void deletePieceAt(QPointF pos);
-    void deletePiece(ChessPiece* pieceToDelete);
+    bool deletePiece(ChessPiece* pieceToDelete);
     bool isPieceChecked(ChessPiece* pieceToCheck);
     
     size_t m_cellSize = 80;
