@@ -48,7 +48,8 @@ void ChessBoard::setupBoard(){
     this->update();
     this->setBackgroundBrush(QBrush(QColor(38,37,34)));
 
-    m_notifySound.play();
+    m_soundPlayer.setSource(QUrl::fromLocalFile(notifySoundPath));
+    m_soundPlayer.play();
     
 }
 
@@ -356,7 +357,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 else {
                     
                     bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_playerKing)){
+                    if(isPieceChecked(m_enemyKing)){
                         m_checkSound.play();
                         
                     }
@@ -438,7 +439,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 else {
                     
                     bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_playerKing)){
+                    if(isPieceChecked(m_enemyKing)){
                         m_checkSound.play();
                         
                     }
@@ -519,7 +520,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 else {
                     
                     bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_playerKing)){
+                    if(isPieceChecked(m_enemyKing)){
                         m_checkSound.play();
                         
                     }
@@ -601,16 +602,19 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                     bool captureFlag = deletePiece(pieceToDel);
                     if(isPieceChecked(m_playerKing)){
-                        m_checkSound.play();
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                        m_soundPlayer.play();
                         
                     }
                     else{
                         if(!captureFlag) {
-                            m_moveSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                            m_soundPlayer.play();
                             
                         }
                         else {
-                            m_captureSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                            m_soundPlayer.play();
                         }
                     }
                     
@@ -646,16 +650,19 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                     bool captureFlag = deletePiece(pieceToDel);
                     if(isPieceChecked(m_enemyKing)){
-                        m_checkSound.play();
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                        m_soundPlayer.play();
                         
                     }
                     else{
                         if(!captureFlag) {
-                            m_moveSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                            m_soundPlayer.play();
                             
                         }
                         else {
-                            m_captureSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                            m_soundPlayer.play();
                         }
                     }
                     
@@ -685,16 +692,19 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                     bool captureFlag = deletePiece(pieceToDel);
                     if(isPieceChecked(m_playerKing)){
-                        m_checkSound.play();
+                        m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                        m_soundPlayer.play();
                         
                     }
                     else{
                         if(!captureFlag) {
-                            m_moveSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                            m_soundPlayer.play();
                             
                         }
                         else {
-                            m_captureSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                            m_soundPlayer.play();
                         }
                     }
                     
@@ -722,11 +732,13 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 senderPiece->setPos(newPos);
                 deletePiece(pieceToDel);
                 if(isPieceChecked(m_enemyKing)){
-                    m_checkSound.play();
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                    m_soundPlayer.play();
                     
                 }
                 else{
-                    m_captureSound.play();
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                    m_soundPlayer.play();
                 }
                 
                 return;            
@@ -748,11 +760,13 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 else {
                     if(pieceToDel == nullptr)
                         if(isPieceChecked(m_enemyKing)){
-                            m_checkSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                            m_soundPlayer.play();
                             
                         }
                         else{
-                            m_moveSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                            m_soundPlayer.play();
                         }
                     else{
                         senderPiece->setPos(oldPos);
@@ -776,11 +790,13 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 senderPiece->setPos(newPos);
                 deletePiece(pieceToDel);
                 if(isPieceChecked(m_playerKing)){
-                    m_checkSound.play();
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                    m_soundPlayer.play();
                     
                 }
                 else{
-                    m_captureSound.play();
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                    m_soundPlayer.play();
                 }
                 
                 return;            
@@ -802,11 +818,13 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 else {
                     if(pieceToDel == nullptr)
                         if(isPieceChecked(m_playerKing)){
-                            m_checkSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                            m_soundPlayer.play();
                             
                         }
                         else{
-                            m_moveSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                            m_soundPlayer.play();
                         }
                     else{
                         senderPiece->setPos(oldPos);
@@ -837,11 +855,13 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 senderPiece->setPos(newPos);
                 deletePiece(pieceToDel);
                 if(isPieceChecked(m_enemyKing)){
-                    m_checkSound.play();
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                    m_soundPlayer.play();
                     
                 }
                 else{
-                    m_captureSound.play();
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                    m_soundPlayer.play();
                 }
                 
                 return;            
@@ -863,11 +883,13 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 else {
                     if(pieceToDel == nullptr)
                         if(isPieceChecked(m_enemyKing)){
-                            m_checkSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                            m_soundPlayer.play();
                             
                         }
                         else{
-                            m_moveSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                            m_soundPlayer.play();
                         }
                     else{
                         senderPiece->setPos(oldPos);
@@ -893,11 +915,13 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 senderPiece->setPos(newPos);
                 deletePiece(pieceToDel);
                 if(isPieceChecked(m_playerKing)){
-                    m_checkSound.play();
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                    m_soundPlayer.play();
                     
                 }
                 else{
-                    m_captureSound.play();
+                    m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+                    m_soundPlayer.play();
                 }
                 
                 return;            
@@ -919,11 +943,13 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 else {
                     if(pieceToDel == nullptr)
                         if(isPieceChecked(m_playerKing)){
-                            m_checkSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(checkSoundPath));
+                            m_soundPlayer.play();
                             
                         }
                         else{
-                            m_moveSound.play();
+                            m_soundPlayer.setSource(QUrl::fromLocalFile(moveSoundPath));
+                            m_soundPlayer.play();
                         }
                     else{
                         senderPiece->setPos(oldPos);
@@ -1476,7 +1502,8 @@ bool ChessBoard::deletePiece(ChessPiece *pieceToDelete) {
     m_piecesArr.erase(std::find(m_piecesArr.begin(), m_piecesArr.end(), pieceToDelete));
     delete pieceToDelete;
     
-    //m_captureSound.play();
+    m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
+    m_soundPlayer.play();
     
     return true;
     

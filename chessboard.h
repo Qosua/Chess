@@ -50,8 +50,17 @@ private:
     ChessPiece* m_playerKing;
     ChessPiece* m_enemyKing;
 
-    QMediaPlayer m_soundPlayer;
-    QAudioOutput m_audioOutput;
+    QMediaPlayer m_notifySound;
+    QMediaPlayer m_moveSound;
+    QMediaPlayer m_checkSound;
+    QMediaPlayer m_captureSound;
+    QMediaPlayer m_castleSound;
+    
+    QAudioOutput m_audioOutput1;
+    QAudioOutput m_audioOutput2;
+    QAudioOutput m_audioOutput3;
+    QAudioOutput m_audioOutput4;
+    QAudioOutput m_audioOutput5;
     
     QString notifySoundPath = "C:/Repos/Qt/Chess/sounds/notify.mp3";
     QString moveSoundPath = "C:/Repos/Qt/Chess/sounds/move-self.mp3";
