@@ -17,13 +17,28 @@
    <string notr="true">#mainWidget{
 
 	border: 1px solid transparent;
-	border-radius: 8px;
+	background-color: rgba(0,0,0,0);
+	border-bottom-color: #3e3e3e;
 
 }
 #widget, #widget_2, #widget_3{
 
-	border: 1px solid transparent
+	border: 1px solid transparent;
+	background-color: rgba(0,0,0,0);
 
+}
+
+#count, #pieceName, #from, #to, #label_3, #takedPiece, #time {
+	color: #dedede;
+}
+
+#widget_3{
+	border-radius: 5px;
+}
+
+#widget{
+	background-color: #1e1e1e;
+	border-radius: 5px;
 }
 
 #actionIcon{
@@ -49,7 +64,7 @@
    </property>
    <item>
     <widget class="QWidget" name="mainWidget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,6,3,3">
       <property name="spacing">
        <number>2</number>
       </property>
@@ -65,6 +80,16 @@
       <property name="bottomMargin">
        <number>2</number>
       </property>
+      <item>
+       <widget class="QLabel" name="count">
+        <property name="text">
+         <string>1</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QWidget" name="widget" native="true">
         <property name="font">
@@ -86,7 +111,7 @@
           <number>2</number>
          </property>
          <property name="bottomMargin">
-          <number>2</number>
+          <number>4</number>
          </property>
          <item>
           <widget class="QLabel" name="pieceName">
@@ -171,18 +196,22 @@
           <number>2</number>
          </property>
          <property name="bottomMargin">
-          <number>2</number>
+          <number>4</number>
          </property>
          <item>
-          <widget class="QPushButton" name="actionIcon">
+          <widget class="QLabel" name="actionIcon">
            <property name="font">
             <font>
              <family>Cascadia Code</family>
-             <pointsize>10</pointsize>
+             <pointsize>11</pointsize>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
             <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
           </widget>
          </item>
@@ -195,7 +224,7 @@
             </font>
            </property>
            <property name="text">
-            <string>wH</string>
+            <string/>
            </property>
           </widget>
          </item>
@@ -218,7 +247,7 @@
           <number>2</number>
          </property>
          <property name="bottomMargin">
-          <number>2</number>
+          <number>4</number>
          </property>
          <item>
           <widget class="QLabel" name="time">

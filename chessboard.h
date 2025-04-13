@@ -45,6 +45,7 @@ private:
     void deletePieceAt(QPointF pos);
     bool deletePiece(ChessPiece* pieceToDelete);
     bool isPieceChecked(ChessPiece* pieceToCheck);
+    QString getPieceName(ChessPiece* piece);
     
     size_t m_cellSize = 80;
     std::vector<ChessPiece*> m_piecesArr;
@@ -55,6 +56,7 @@ private:
     ChessPiece* m_playerKing;
     ChessPiece* m_enemyKing;
     ChessPiece* tempIgnoredPiece = nullptr;
+    size_t turnsCounter = 0;
 
     QMediaPlayer m_notifySound;
     QMediaPlayer m_moveSound;

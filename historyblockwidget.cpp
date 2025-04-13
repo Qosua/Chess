@@ -37,6 +37,22 @@ HistoryBlockWidget::HistoryBlockWidget(const PlayerAction& info) :
     to += QChar('8' - i/80);
     m_ui->to->setText(to);
     
+    m_ui->count->setText(QString::number(info.turnNumber));
     
+    if(info.actionSide){
+        m_ui->widget_3->setStyleSheet("background-color: #dedede");
+        m_ui->time->setStyleSheet("color: #1e1e1e");
+    }
+    else{
+        m_ui->widget_3->setStyleSheet("background-color: #1e1e1e");
+        m_ui->time->setStyleSheet("color: #dedede");
+    }
+    
+    if(!info.pieceTwoName.isEmpty()){
+        
+        m_ui->takedPiece->setText(info.pieceTwoName);
+        m_ui->actionIcon->setText(" X");
+        
+    }
     
 }

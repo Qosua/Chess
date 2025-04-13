@@ -337,7 +337,11 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 
+                turnsCounter += 1;
+                
+                QString name = getPieceName(pieceToDel);
                 bool captureFlag = deletePiece(pieceToDel);
+                
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
                     
@@ -354,9 +358,17 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 PlayerAction action;
                 action.actionSide = senderPiece->getPieceColor();
                 action.pieceOne = senderPiece->getType();
-                action.turnType = ActionType::turn;
                 action.oldPos = oldPos;
                 action.newPos = newPos;
+                action.turnNumber = turnsCounter;
+                if(captureFlag){
+                    
+                    action.turnType = ActionType::capture;
+                    action.pieceTwoName = name;
+                    
+                }
+                else 
+                    action.turnType = ActionType::turn;
                 emit turnMade(action);
                 
             }
@@ -383,6 +395,10 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 
+                turnsCounter += 1;
+                
+                QString name = getPieceName(pieceToDel);
+                
                 bool captureFlag = deletePiece(pieceToDel);
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
@@ -399,9 +415,17 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 PlayerAction action;
                 action.actionSide = senderPiece->getPieceColor();
                 action.pieceOne = senderPiece->getType();
-                action.turnType = ActionType::turn;
                 action.oldPos = oldPos;
                 action.newPos = newPos;
+                action.turnNumber = turnsCounter;
+                if(captureFlag){
+                    
+                    action.turnType = ActionType::capture;
+                    action.pieceTwoName = name;
+                    
+                }
+                else 
+                    action.turnType = ActionType::turn;
                 emit turnMade(action);
                 
             }
@@ -428,6 +452,10 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 
+                turnsCounter += 1;
+                
+                QString name = getPieceName(pieceToDel);
+                
                 bool captureFlag = deletePiece(pieceToDel);
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
@@ -444,9 +472,17 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 PlayerAction action;
                 action.actionSide = senderPiece->getPieceColor();
                 action.pieceOne = senderPiece->getType();
-                action.turnType = ActionType::turn;
                 action.oldPos = oldPos;
                 action.newPos = newPos;
+                action.turnNumber = turnsCounter;
+                if(captureFlag){
+                    
+                    action.turnType = ActionType::capture;
+                    action.pieceTwoName = name;
+                    
+                }
+                else 
+                    action.turnType = ActionType::turn;
                 emit turnMade(action);
                 
             }
@@ -474,6 +510,10 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 
+                turnsCounter += 1;
+                
+                QString name = getPieceName(pieceToDel);
+                
                 bool captureFlag = deletePiece(pieceToDel);
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
@@ -490,9 +530,17 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 PlayerAction action;
                 action.actionSide = senderPiece->getPieceColor();
                 action.pieceOne = senderPiece->getType();
-                action.turnType = ActionType::turn;
                 action.oldPos = oldPos;
                 action.newPos = newPos;
+                action.turnNumber = turnsCounter;
+                if(captureFlag){
+                    
+                    action.turnType = ActionType::capture;
+                    action.pieceTwoName = name;
+                    
+                }
+                else 
+                    action.turnType = ActionType::turn;
                 emit turnMade(action);
                 
             }
@@ -521,6 +569,10 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 
+                turnsCounter += 1;
+                
+                QString name = getPieceName(pieceToDel);
+                
                 bool captureFlag = deletePiece(pieceToDel);
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
@@ -538,9 +590,17 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 PlayerAction action;
                 action.actionSide = senderPiece->getPieceColor();
                 action.pieceOne = senderPiece->getType();
-                action.turnType = ActionType::turn;
                 action.oldPos = oldPos;
                 action.newPos = newPos;
+                action.turnNumber = turnsCounter;
+                if(captureFlag){
+                    
+                    action.turnType = ActionType::capture;
+                    action.pieceTwoName = name;
+                    
+                }
+                else 
+                    action.turnType = ActionType::turn;
                 emit turnMade(action);
                 
             }
@@ -566,6 +626,11 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 return;
             }
             else {
+                
+                turnsCounter += 1;
+                
+                QString name = getPieceName(pieceToDel);
+                
                 deletePiece(pieceToDel);
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
@@ -574,6 +639,17 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 else{
                     m_captureSound.play();
                 }
+                
+                PlayerAction action;
+                action.actionSide = senderPiece->getPieceColor();
+                action.pieceOne = senderPiece->getType();
+                action.oldPos = oldPos;
+                action.newPos = newPos;
+                action.turnNumber = turnsCounter;
+                action.turnType = ActionType::capture;
+                action.pieceTwoName = name;
+                
+                emit turnMade(action);
                 
                 tempIgnoredPiece = nullptr;
                 return;
@@ -596,14 +672,16 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 
             }
             else {
-                if(pieceToDel == nullptr)
+                if(pieceToDel == nullptr) {
+                    
+                    turnsCounter += 1;
                     
                     if(isPieceChecked(enemyKing))
                         m_checkSound.play();
                     else
                         m_moveSound.play();
-                
-                else{
+                }
+                else {
                     senderPiece->setPos(oldPos);
                     return;
                 }
@@ -611,9 +689,10 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 PlayerAction action;
                 action.actionSide = senderPiece->getPieceColor();
                 action.pieceOne = senderPiece->getType();
-                action.turnType = ActionType::turn;
                 action.oldPos = oldPos;
                 action.newPos = newPos;
+                action.turnNumber = turnsCounter;
+                action.turnType = ActionType::turn;
                 emit turnMade(action);
                 
             }
@@ -640,6 +719,11 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 return;
             }
             else {
+                
+                turnsCounter += 1;
+                
+                QString name = getPieceName(pieceToDel);
+                
                 deletePiece(pieceToDel);
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
@@ -648,6 +732,16 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 else{
                     m_captureSound.play();
                 }
+                
+                PlayerAction action;
+                action.actionSide = senderPiece->getPieceColor();
+                action.pieceOne = senderPiece->getType();
+                action.oldPos = oldPos;
+                action.newPos = newPos;
+                action.turnNumber = turnsCounter;
+                action.turnType = ActionType::capture;
+                action.pieceTwoName = name;
+                emit turnMade(action);
                 
                 tempIgnoredPiece = nullptr;
                 return;
@@ -670,14 +764,18 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 
             }
             else {
-                if(pieceToDel == nullptr)
+                
+                if(pieceToDel == nullptr){
+                    
+                    turnsCounter += 1;
                     
                     if(isPieceChecked(enemyKing))
                         m_checkSound.play();
                     else
                         m_moveSound.play();
                     
-                else{
+                }
+                else {
                     senderPiece->setPos(oldPos);
                     return;
                 }
@@ -685,9 +783,11 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 PlayerAction action;
                 action.actionSide = senderPiece->getPieceColor();
                 action.pieceOne = senderPiece->getType();
-                action.turnType = ActionType::turn;
                 action.oldPos = oldPos;
                 action.newPos = newPos;
+                action.turnNumber = turnsCounter;
+                action.turnType = ActionType::turn;
+                    
                 emit turnMade(action);
                 
             }
@@ -1510,6 +1610,31 @@ bool ChessBoard::isPieceChecked(ChessPiece* pieceToCheck) {
         qDebug() << "White king checked";
     
     return flag;
+}
+
+QString ChessBoard::getPieceName(ChessPiece *piece) {
+    
+    if(piece == nullptr)
+        return "";
+    
+    QString name;
+    name = (piece->getPieceColor() ? "w" : "b");
+    
+    if(piece->getType() == PieceType::bishop)
+        name += "b";
+    if(piece->getType() == PieceType::queen)
+        name += "q";
+    if(piece->getType() == PieceType::king)
+        name += "k";
+    if(piece->getType() == PieceType::knight)
+        name += "h";
+    if(piece->getType() == PieceType::rook)
+        name += "r";
+    if(piece->getType() == PieceType::blackPawn or piece->getType() == PieceType::whitePawn)
+        name += "p";
+    
+    return name;
+    
 }
 
 void ChessBoard::catchChosenPiece(QPointF oldPos) {

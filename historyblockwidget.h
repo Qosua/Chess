@@ -9,6 +9,7 @@
 enum ActionType {
     
     turn,
+    capture,
     surrender,
     drawOffer,
     
@@ -19,11 +20,14 @@ struct PlayerAction {
     bool actionSide;
     
     PieceType pieceOne;
+    QString pieceTwoName;
     
     QPointF oldPos;
     QPointF newPos;
     
     ActionType turnType;
+    
+    int turnNumber;
     
 };
 

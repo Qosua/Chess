@@ -130,6 +130,7 @@ void ClassicalChessWidget::writeToHistory(PlayerAction& actionInfo) {
     item->setSizeHint(block->sizeHint());
     
     m_ui->listWidget->setItemWidget(item, block);
+    m_ui->listWidget->scrollToBottom();
     
     
 }
