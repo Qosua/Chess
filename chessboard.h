@@ -9,12 +9,14 @@
 #include <cmath>
 #include <QMediaPlayer>
 #include <QAudioOutput>
-#include <windows.h>
 
 #include "chesspiece.h"
+#include "historyblockwidget.h"
+#include "customrectangle.h"
 
 class ChessBoard : public QGraphicsScene{
     
+    Q_OBJECT
     
 public:
     ChessBoard();
@@ -25,7 +27,7 @@ public:
     bool getPlayerSide();
     
 signals:
-    
+    void turnMade(PlayerAction& actionInfo);
     
 private:
     void drawField();
@@ -52,6 +54,7 @@ private:
     std::vector<QGraphicsEllipseItem*> m_tipsArr;
     ChessPiece* m_playerKing;
     ChessPiece* m_enemyKing;
+    ChessPiece* tempIgnoredPiece = nullptr;
 
     QMediaPlayer m_notifySound;
     QMediaPlayer m_moveSound;

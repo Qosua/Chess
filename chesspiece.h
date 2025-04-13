@@ -16,6 +16,7 @@ enum PieceType{
     king,
     queen,
     rook,
+    none,
     
 };
 
@@ -41,7 +42,7 @@ signals:
     void pieceIsChosen(QPointF oldPos);
     
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     
 private:
     PieceType m_type;

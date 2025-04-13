@@ -21,10 +21,16 @@
 	background-color: #302e2b;
 
 }
+#listWidget{
+	background-color: #262522;
+	border-radius: 12px;
+	border: 1px solid transparent;
+	
+}
 #chessField, #historyWidget{
 	background-color: #262522;
-	border-radius: 10px;
-	border: 1px solid rgba(0,0,0,0);
+	border-radius: 16px;
+	border: 1px solid transparent;
 }
 #graphicsView{
 	border: 1px solid transparent;
@@ -100,7 +106,7 @@ QLabel{
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="matchMaker">
       <layout class="QHBoxLayout" name="horizontalLayout" stretch="6,7,6">
@@ -482,7 +488,38 @@ QLabel{
         </widget>
        </item>
        <item>
-        <widget class="QWidget" name="historyWidget" native="true"/>
+        <widget class="QWidget" name="historyWidget" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QListWidget" name="listWidget">
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
      </widget>

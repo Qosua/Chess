@@ -1,6 +1,7 @@
 #pragma once
 
-#include <QtWidgets/QMainWindow>
+#include <QWidget>
+#include <QListWidgetItem>
 #include "ui_classicalchesswidget.h"
 #include "chessboard.h"
 
@@ -28,6 +29,7 @@ private:
     void establishingConnections();
     void startMatch();
     void connectToMatch();
+    void writeToHistory(PlayerAction& actionInfo);
     
 protected:
     void resizeEvent(QResizeEvent *event);

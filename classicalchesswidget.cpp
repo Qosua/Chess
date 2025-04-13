@@ -98,6 +98,7 @@ void ClassicalChessWidget::startMatch() {
     m_board = new ChessBoard;
     m_board->setPlayerSide((m_choosenSide == 1 ? true : false));
     m_board->setupBoard();
+    connect(m_board, &ChessBoard::turnMade, this, &ClassicalChessWidget::writeToHistory);
     
     m_ui->graphicsView->setScene(m_board);
     m_ui->graphicsView->scene()->setSceneRect(QRect(0,0, 640,640));
@@ -116,6 +117,20 @@ void ClassicalChessWidget::connectToMatch() {
     }
     
     QString address = m_ui->connectToHost->text();
+    
+}
+
+void ClassicalChessWidget::writeToHistory(PlayerAction& actionInfo) {
+    
+    qDebug() << actionInfo.turnType << actionInfo.pieceOne << "-test";
+    
+    HistoryBlockWidget* block = new HistoryBlockWidget(actionInfo);
+    
+    QListWidgetItem* item = new QListWidgetItem(m_ui->listWidget);
+    item->setSizeHint(block->sizeHint());
+    
+    m_ui->listWidget->setItemWidget(item, block);
+    
     
 }
 

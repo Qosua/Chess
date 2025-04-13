@@ -20,10 +20,14 @@ QtApplication {
     }
     Group{
         name: "ChessBoard";
-        files: ["chessboard.cpp",
-                "chessboard.h",
-                "chesspiece.cpp",
-                "chesspiece.h",]
+        files: [
+            "chessboard.cpp",
+            "chessboard.h",
+            "chesspiece.cpp",
+            "chesspiece.h",
+            "customrectangle.cpp",
+            "customrectangle.h",
+        ]
     }
     Group{
         name: "MenuWidget";
@@ -33,9 +37,14 @@ QtApplication {
     }
     Group{
         name: "ClassicalChessWidget";
-        files: ["classicalchesswidget.cpp",
-                "classicalchesswidget.h",
-                "classicalchesswidget.ui"]
+        files: [
+            "classicalchesswidget.cpp",
+            "classicalchesswidget.h",
+            "classicalchesswidget.ui",
+            "historyblockwidget.cpp",
+            "historyblockwidget.h",
+            "historyblockwidget.ui",
+        ]
     }
     
     files: [

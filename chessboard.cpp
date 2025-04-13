@@ -62,18 +62,39 @@ bool ChessBoard::getPlayerSide() {
 
 void ChessBoard::drawField() {
 
-    int check = (m_playerSide ? 0 : 1);
+    int order = (m_playerSide ? 0 : 1);
     for(int i = 0; i < 8; ++i){
         for(int j = 0; j < 8; ++j){
             
-            QGraphicsRectItem* rectangle = new QGraphicsRectItem(i*m_cellSize, j*m_cellSize, m_cellSize, m_cellSize);
-
-            if((i+j)%2 == check)
+            CustomRectangle* rectangle = new CustomRectangle(QRectF(j*m_cellSize, i*m_cellSize, m_cellSize, m_cellSize));
+            
+            if((i+j)%2 == order) {
                 rectangle->setBrush(QBrush(QColor(235,236,208)));
-            else
+            }
+            else{
                 rectangle->setBrush(QBrush(QColor(115,149,82)));
+            }
             
             rectangle->setPen(QPen(Qt::transparent, 0));
+            
+            if(j == 0) {
+                if((i+j)%2 == order) {
+                    rectangle->setText(QString(QChar('8' - i)), QColor(115,149,82), false);
+                }
+                else{
+                    rectangle->setText(QChar('8' - i), QColor(235,236,208), false);
+                }
+            }
+            if(i == 7){
+                
+                if((i+j)%2 == order) {
+                    rectangle->setText(QString(QChar('a' + j)), QColor(115,149,82), true);
+                }
+                else{
+                    rectangle->setText(QChar('a' + j), QColor(235,236,208), true);
+                }
+                
+            }
             
             this->addItem(rectangle);
             
@@ -307,6 +328,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             
             ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
             
+            tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
             if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
@@ -321,19 +343,25 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                 }
                 else{
-                    if(!captureFlag) {
+                    
+                    if(!captureFlag)
                         m_moveSound.play();
-                        
-                    }
-                    else {
+                    else
                         m_captureSound.play();
-                    }
+                    
                 }
+                
+                PlayerAction action;
+                action.actionSide = senderPiece->getPieceColor();
+                action.pieceOne = senderPiece->getType();
+                action.turnType = ActionType::turn;
+                action.oldPos = oldPos;
+                action.newPos = newPos;
+                emit turnMade(action);
                 
             }
             
             m_lastChosenPiece = nullptr;
-            qDebug() << "Horse";
         }
         else
             senderPiece->setPos(oldPos);
@@ -346,6 +374,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             
             ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
             
+            tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
             if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
@@ -360,19 +389,24 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                 }
                 else{
-                    if(!captureFlag) {
+                    
+                    if(!captureFlag)
                         m_moveSound.play();
-                        
-                    }
-                    else {
+                    else
                         m_captureSound.play();
-                    }
                 }
+                
+                PlayerAction action;
+                action.actionSide = senderPiece->getPieceColor();
+                action.pieceOne = senderPiece->getType();
+                action.turnType = ActionType::turn;
+                action.oldPos = oldPos;
+                action.newPos = newPos;
+                emit turnMade(action);
                 
             }
             
             m_lastChosenPiece = nullptr;
-            qDebug() << "King";
         }
         else
             senderPiece->setPos(oldPos);
@@ -385,6 +419,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             
             ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
             
+            tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
             if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
@@ -399,19 +434,24 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                 }
                 else{
-                    if(!captureFlag) {
+                    
+                    if(!captureFlag)
                         m_moveSound.play();
-                        
-                    }
-                    else {
+                    else
                         m_captureSound.play();
-                    }
                 }
+                
+                PlayerAction action;
+                action.actionSide = senderPiece->getPieceColor();
+                action.pieceOne = senderPiece->getType();
+                action.turnType = ActionType::turn;
+                action.oldPos = oldPos;
+                action.newPos = newPos;
+                emit turnMade(action);
                 
             }
             
             m_lastChosenPiece = nullptr;
-            qDebug() << "bishop";
         }
         else
             senderPiece->setPos(oldPos);
@@ -425,6 +465,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             
             ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
             
+            tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
             if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
@@ -439,19 +480,24 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                 }
                 else{
-                    if(!captureFlag) {
+                    
+                    if(!captureFlag) 
                         m_moveSound.play();
-                        
-                    }
-                    else {
+                    else
                         m_captureSound.play();
-                    }
                 }
+                
+                PlayerAction action;
+                action.actionSide = senderPiece->getPieceColor();
+                action.pieceOne = senderPiece->getType();
+                action.turnType = ActionType::turn;
+                action.oldPos = oldPos;
+                action.newPos = newPos;
+                emit turnMade(action);
                 
             }
             
             m_lastChosenPiece = nullptr;
-            qDebug() << "rook";
         }
         else
             senderPiece->setPos(oldPos);
@@ -466,6 +512,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             
             ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
             
+            tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
             if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
@@ -480,19 +527,25 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                 }
                 else{
-                    if(!captureFlag) {
+                    
+                    if(!captureFlag)
                         m_moveSound.play();
-                        
-                    }
-                    else {
+                    else
                         m_captureSound.play();
-                    }
+                    
                 }
+                
+                PlayerAction action;
+                action.actionSide = senderPiece->getPieceColor();
+                action.pieceOne = senderPiece->getType();
+                action.turnType = ActionType::turn;
+                action.oldPos = oldPos;
+                action.newPos = newPos;
+                emit turnMade(action);
                 
             }
             
             m_lastChosenPiece = nullptr;
-            qDebug() << "queen";
         }
         else
             senderPiece->setPos(oldPos);
@@ -506,17 +559,26 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
         
         if((delta.x() == 1 or delta.x() == -1) and delta.y() == reverseForPawn*1 and pieceToDel != nullptr){
             
+            tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
-            deletePiece(pieceToDel);
-            if(isPieceChecked(enemyKing)){
-                m_checkSound.play();
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
+                senderPiece->setPos(oldPos);
+                return;
+            }
+            else {
+                deletePiece(pieceToDel);
+                if(isPieceChecked(enemyKing)){
+                    m_checkSound.play();
+                    
+                }
+                else{
+                    m_captureSound.play();
+                }
                 
+                tempIgnoredPiece = nullptr;
+                return;
             }
-            else{
-                m_captureSound.play();
-            }
-            
-            return;            
+            tempIgnoredPiece = nullptr;
             
         }
 
@@ -525,6 +587,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             
             ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
             
+            tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
             if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
@@ -534,23 +597,29 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 if(pieceToDel == nullptr)
-                    if(isPieceChecked(enemyKing)){
+                    
+                    if(isPieceChecked(enemyKing))
                         m_checkSound.play();
-                        
-                    }
-                    else{
+                    else
                         m_moveSound.play();
-                    }
+                
                 else{
                     senderPiece->setPos(oldPos);
                     return;
                 }
                 
+                PlayerAction action;
+                action.actionSide = senderPiece->getPieceColor();
+                action.pieceOne = senderPiece->getType();
+                action.turnType = ActionType::turn;
+                action.oldPos = oldPos;
+                action.newPos = newPos;
+                emit turnMade(action);
+                
             }
             
             m_lastChosenPiece = nullptr;
             senderPiece->plusOneToTurn();
-            qDebug() << "white pawn";
         }
         else
             senderPiece->setPos(oldPos);
@@ -564,17 +633,26 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
         
         if((delta.x() == 1 or delta.x() == -1) and delta.y() == -reverseForPawn*1 and pieceToDel != nullptr){
             
+            tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
-            deletePiece(pieceToDel);
-            if(isPieceChecked(enemyKing)){
-                m_checkSound.play();
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
+                senderPiece->setPos(oldPos);
+                return;
+            }
+            else {
+                deletePiece(pieceToDel);
+                if(isPieceChecked(enemyKing)){
+                    m_checkSound.play();
+                    
+                }
+                else{
+                    m_captureSound.play();
+                }
                 
+                tempIgnoredPiece = nullptr;
+                return;
             }
-            else{
-                m_captureSound.play();
-            }
-            
-            return;            
+            tempIgnoredPiece = nullptr;
             
         }
         
@@ -583,6 +661,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             
             ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
             
+            tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
             if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
@@ -592,23 +671,29 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 if(pieceToDel == nullptr)
-                    if(isPieceChecked(enemyKing)){
+                    
+                    if(isPieceChecked(enemyKing))
                         m_checkSound.play();
-                        
-                    }
-                    else{
+                    else
                         m_moveSound.play();
-                    }
+                    
                 else{
                     senderPiece->setPos(oldPos);
                     return;
                 }
                 
+                PlayerAction action;
+                action.actionSide = senderPiece->getPieceColor();
+                action.pieceOne = senderPiece->getType();
+                action.turnType = ActionType::turn;
+                action.oldPos = oldPos;
+                action.newPos = newPos;
+                emit turnMade(action);
+                
             }
             
             m_lastChosenPiece = nullptr;
             senderPiece->plusOneToTurn();
-            qDebug() << "white pawn";
         }
         else
             senderPiece->setPos(oldPos);
@@ -621,6 +706,8 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
     } break;
 
     }
+    
+    tempIgnoredPiece = nullptr;
 
 }
 
@@ -1075,9 +1162,12 @@ ChessPiece* ChessBoard::findPeiceOnCoords(QPointF pos) {
 
     ChessPiece* ans = nullptr;
 
-    for(int i = 0; i < m_piecesArr.size(); ++i){
+    for(size_t i = 0; i < m_piecesArr.size(); ++i){
 
-        if(pos == m_piecesArr[i]->scenePos()){
+        if(pos == m_piecesArr[i]->scenePos()) {
+            
+            if(tempIgnoredPiece != nullptr and tempIgnoredPiece == m_piecesArr[i])
+                continue;
 
             ans = m_piecesArr[i];
             break;
