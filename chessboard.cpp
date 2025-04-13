@@ -293,653 +293,325 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
     delta.setY(delta.y()*-1);
 
     int reverseForPawn = m_playerSide ? 1 : -1;
+    ChessPiece* playerKing = (m_playerSide == senderPiece->getPieceColor() ? m_playerKing : m_enemyKing);
+    ChessPiece* enemyKing = (m_playerSide == senderPiece->getPieceColor() ? m_enemyKing : m_playerKing);
 
     switch(senderPiece->getType()){
 
     case PieceType::knight:{
-        
-        if(m_playerSide == senderPiece->getPieceColor()){
 
-            if( (delta.x() == 1 and (delta.y() == 2 or delta.y() == -2)) or
-                (delta.x() == 2 and (delta.y() == 1 or delta.y() == -1)) or
-                (delta.x() == -1 and (delta.y() == 2 or delta.y() == -2)) or
-                (delta.x() == -2 and (delta.y() == 1 or delta.y() == -1))){
+        if( (delta.x() == 1 and (delta.y() == 2 or delta.y() == -2)) or
+            (delta.x() == 2 and (delta.y() == 1 or delta.y() == -1)) or
+            (delta.x() == -1 and (delta.y() == 2 or delta.y() == -2)) or
+            (delta.x() == -2 and (delta.y() == 1 or delta.y() == -1))){
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
+            senderPiece->setPos(newPos);
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+                senderPiece->setPos(oldPos);
                 
-                senderPiece->setPos(newPos);
-                if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
-                    
-                    senderPiece->setPos(oldPos);
+            }
+            else {
+                
+                bool captureFlag = deletePiece(pieceToDel);
+                if(isPieceChecked(enemyKing)){
+                    m_checkSound.play();
                     
                 }
-                else {
-                    
-                    bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_enemyKing)){
-                        m_checkSound.play();
+                else{
+                    if(!captureFlag) {
+                        m_moveSound.play();
                         
                     }
-                    else{
-                        if(!captureFlag) {
-                            m_moveSound.play();
-                            
-                        }
-                        else {
-                            m_captureSound.play();
-                        }
+                    else {
+                        m_captureSound.play();
                     }
-                    
                 }
                 
-                m_lastChosenPiece = nullptr;
-                qDebug() << "Horse";
             }
-            else
-                senderPiece->setPos(oldPos);
-        }
-        else{
             
-            if( (delta.x() == 1 and (delta.y() == 2 or delta.y() == -2)) or
-                (delta.x() == 2 and (delta.y() == 1 or delta.y() == -1)) or
-                (delta.x() == -1 and (delta.y() == 2 or delta.y() == -2)) or
-                (delta.x() == -2 and (delta.y() == 1 or delta.y() == -1))){
-                
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
-                
-                senderPiece->setPos(newPos);
-                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)) {
-                    
-                    senderPiece->setPos(oldPos);
-                    
-                }
-                else {
-                    
-                    bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_playerKing)){
-                        m_checkSound.play();
-                        
-                    }
-                    else{
-                        if(!captureFlag) {
-                            m_moveSound.play();
-                            
-                        }
-                        else {
-                            m_captureSound.play();
-                        }
-                    }
-                    
-                }
-                
-                m_lastChosenPiece = nullptr;
-                qDebug() << "Horse";
-            }
-            else
-                senderPiece->setPos(oldPos);
-            
+            m_lastChosenPiece = nullptr;
+            qDebug() << "Horse";
         }
-
+        else
+            senderPiece->setPos(oldPos);
 
     } break;
 
     case PieceType::king:{
-        
-        if(m_playerSide == senderPiece->getPieceColor()){
             
-            if(std::abs(delta.x()) <= 1 and std::abs(delta.y()) <= 1){
+        if(std::abs(delta.x()) <= 1 and std::abs(delta.y()) <= 1){
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
+            senderPiece->setPos(newPos);
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+                senderPiece->setPos(oldPos);
                 
-                senderPiece->setPos(newPos);
-                if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
-                    
-                    senderPiece->setPos(oldPos);
+            }
+            else {
+                
+                bool captureFlag = deletePiece(pieceToDel);
+                if(isPieceChecked(enemyKing)){
+                    m_checkSound.play();
                     
                 }
-                else {
-                    
-                    bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_enemyKing)){
-                        m_checkSound.play();
+                else{
+                    if(!captureFlag) {
+                        m_moveSound.play();
                         
                     }
-                    else{
-                        if(!captureFlag) {
-                            m_moveSound.play();
-                            
-                        }
-                        else {
-                            m_captureSound.play();
-                        }
+                    else {
+                        m_captureSound.play();
                     }
-                    
                 }
                 
-                m_lastChosenPiece = nullptr;
-                qDebug() << "King";
             }
-            else
-                senderPiece->setPos(oldPos);
-        
-        }
-        else{
             
-            if(std::abs(delta.x()) <= 1 and std::abs(delta.y()) <= 1){
-                
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
-                
-                senderPiece->setPos(newPos);
-                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)) {
-                    
-                    senderPiece->setPos(oldPos);
-                    
-                }
-                else {
-                    
-                    bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_playerKing)){
-                        m_checkSound.play();
-                        
-                    }
-                    else{
-                        if(!captureFlag) {
-                            m_moveSound.play();
-                            
-                        }
-                        else {
-                            m_captureSound.play();
-                        }
-                    }
-                    
-                }
-                
-                m_lastChosenPiece = nullptr;
-                qDebug() << "King";
-            }
-            else
-                senderPiece->setPos(oldPos);
-            
+            m_lastChosenPiece = nullptr;
+            qDebug() << "King";
         }
-
+        else
+            senderPiece->setPos(oldPos);
 
     } break;
 
     case PieceType::bishop:{
         
-        if(m_playerSide == senderPiece->getPieceColor()) {
-        
-            if(std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1 and !isPieceOnWay(oldPos, newPos)) {
+        if(std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1 and !isPieceOnWay(oldPos, newPos)) {
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
+            senderPiece->setPos(newPos);
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+                senderPiece->setPos(oldPos);
                 
-                senderPiece->setPos(newPos);
-                if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
-                    
-                    senderPiece->setPos(oldPos);
+            }
+            else {
+                
+                bool captureFlag = deletePiece(pieceToDel);
+                if(isPieceChecked(enemyKing)){
+                    m_checkSound.play();
                     
                 }
-                else {
-                    
-                    bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_enemyKing)){
-                        m_checkSound.play();
+                else{
+                    if(!captureFlag) {
+                        m_moveSound.play();
                         
                     }
-                    else{
-                        if(!captureFlag) {
-                            m_moveSound.play();
-                            
-                        }
-                        else {
-                            m_captureSound.play();
-                        }
+                    else {
+                        m_captureSound.play();
                     }
-                    
                 }
                 
-                m_lastChosenPiece = nullptr;
-                qDebug() << "bishop";
             }
-            else
-                senderPiece->setPos(oldPos);
-        }
-        else {
             
-            if(std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1 and !isPieceOnWay(oldPos, newPos)) {
-                
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
-                
-                senderPiece->setPos(newPos);
-                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)) {
-                    
-                    senderPiece->setPos(oldPos);
-                    
-                }
-                else {
-                    
-                    bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_playerKing)){
-                        m_checkSound.play();
-                        
-                    }
-                    else{
-                        if(!captureFlag) {
-                            m_moveSound.play();
-                            
-                        }
-                        else {
-                            m_captureSound.play();
-                        }
-                    }
-                    
-                }
-                
-                m_lastChosenPiece = nullptr;
-                qDebug() << "bishop";
-            }
-            else
-                senderPiece->setPos(oldPos);
-            
+            m_lastChosenPiece = nullptr;
+            qDebug() << "bishop";
         }
+        else
+            senderPiece->setPos(oldPos);
 
 
     } break;
 
     case PieceType::rook:{
-        
-        if(m_playerSide == senderPiece->getPieceColor()) {
 
-            if((delta.x() == 0 or delta.y() == 0) and !isPieceOnWay(oldPos, newPos)){
+        if((delta.x() == 0 or delta.y() == 0) and !isPieceOnWay(oldPos, newPos)){
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
+            senderPiece->setPos(newPos);
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+                senderPiece->setPos(oldPos);
                 
-                senderPiece->setPos(newPos);
-                if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
-                    
-                    senderPiece->setPos(oldPos);
+            }
+            else {
+                
+                bool captureFlag = deletePiece(pieceToDel);
+                if(isPieceChecked(enemyKing)){
+                    m_checkSound.play();
                     
                 }
-                else {
-                    
-                    bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_enemyKing)){
-                        m_checkSound.play();
+                else{
+                    if(!captureFlag) {
+                        m_moveSound.play();
                         
                     }
-                    else{
-                        if(!captureFlag) {
-                            m_moveSound.play();
-                            
-                        }
-                        else {
-                            m_captureSound.play();
-                        }
+                    else {
+                        m_captureSound.play();
                     }
-                    
                 }
                 
-                m_lastChosenPiece = nullptr;
-                qDebug() << "rook";
             }
-            else
-                senderPiece->setPos(oldPos);
-        }
-        else {
             
-            if((delta.x() == 0 or delta.y() == 0) and !isPieceOnWay(oldPos, newPos)){
-                
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
-                
-                senderPiece->setPos(newPos);
-                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)) {
-                    
-                    senderPiece->setPos(oldPos);
-                    
-                }
-                else {
-                    
-                    bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_playerKing)){
-                        m_checkSound.play();
-                        
-                    }
-                    else{
-                        if(!captureFlag) {
-                            m_moveSound.play();
-                            
-                        }
-                        else {
-                            m_captureSound.play();
-                        }
-                    }
-                    
-                }
-                
-                m_lastChosenPiece = nullptr;
-                qDebug() << "rook";
-            }
-            else
-                senderPiece->setPos(oldPos);
-            
+            m_lastChosenPiece = nullptr;
+            qDebug() << "rook";
         }
+        else
+            senderPiece->setPos(oldPos);
 
 
     } break;
 
     case PieceType::queen:{
-        
-        if(m_playerSide == senderPiece->getPieceColor()) {
 
-            if(!isPieceOnWay(oldPos, newPos) and ((std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1) or
-                (delta.x() == 0 or delta.y() == 0))) {
+        if(!isPieceOnWay(oldPos, newPos) and ((std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1) or
+            (delta.x() == 0 or delta.y() == 0))) {
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
+            senderPiece->setPos(newPos);
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+                senderPiece->setPos(oldPos);
                 
-                senderPiece->setPos(newPos);
-                if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
-                    
-                    senderPiece->setPos(oldPos);
+            }
+            else {
+                
+                bool captureFlag = deletePiece(pieceToDel);
+                if(isPieceChecked(enemyKing)){
+                    m_checkSound.play();
                     
                 }
-                else {
-                    
-                    bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_enemyKing)){
-                        m_checkSound.play();
+                else{
+                    if(!captureFlag) {
+                        m_moveSound.play();
                         
                     }
-                    else{
-                        if(!captureFlag) {
-                            m_moveSound.play();
-                            
-                        }
-                        else {
-                            m_captureSound.play();
-                        }
+                    else {
+                        m_captureSound.play();
                     }
-                    
                 }
                 
-                m_lastChosenPiece = nullptr;
-                qDebug() << "queen";
             }
-            else
-                senderPiece->setPos(oldPos);
-        
-        }
-        else{
             
-            if(!isPieceOnWay(oldPos, newPos) and ((std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1) or
-                                                   (delta.x() == 0 or delta.y() == 0))) {
-                
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
-                
-                senderPiece->setPos(newPos);
-                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)) {
-                    
-                    senderPiece->setPos(oldPos);
-                    
-                }
-                else {
-                    
-                    bool captureFlag = deletePiece(pieceToDel);
-                    if(isPieceChecked(m_playerKing)){
-                        m_checkSound.play();
-                        
-                    }
-                    else{
-                        if(!captureFlag) {
-                            m_moveSound.play();
-                            
-                        }
-                        else {
-                            m_captureSound.play();
-                        }
-                    }
-                    
-                }
-                
-                m_lastChosenPiece = nullptr;
-                qDebug() << "queen";
-            }
-            else
-                senderPiece->setPos(oldPos);
-            
+            m_lastChosenPiece = nullptr;
+            qDebug() << "queen";
         }
+        else
+            senderPiece->setPos(oldPos);
 
 
     } break;
 
     case PieceType::whitePawn:{
         
-        if(m_playerSide == senderPiece->getPieceColor()) {
+        ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
         
+        if((delta.x() == 1 or delta.x() == -1) and delta.y() == reverseForPawn*1 and pieceToDel != nullptr){
+            
+            senderPiece->setPos(newPos);
+            deletePiece(pieceToDel);
+            if(isPieceChecked(enemyKing)){
+                m_checkSound.play();
+                
+            }
+            else{
+                m_captureSound.play();
+            }
+            
+            return;            
+            
+        }
+
+        if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
+           (delta.y() == reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == reverseForPawn*2)))) {
+            
             ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
             
-            if((delta.x() == 1 or delta.x() == -1) and delta.y() == reverseForPawn*1 and pieceToDel != nullptr){
+            senderPiece->setPos(newPos);
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
-                senderPiece->setPos(newPos);
-                deletePiece(pieceToDel);
-                if(isPieceChecked(m_enemyKing)){
-                    m_checkSound.play();
-                    
-                }
-                else{
-                    m_captureSound.play();
-                }
-                
-                return;            
+                senderPiece->setPos(oldPos);
+                return;
                 
             }
-    
-            if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
-               (delta.y() == reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == reverseForPawn*2)))) {
-                
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
-                
-                senderPiece->setPos(newPos);
-                if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
-                    
+            else {
+                if(pieceToDel == nullptr)
+                    if(isPieceChecked(enemyKing)){
+                        m_checkSound.play();
+                        
+                    }
+                    else{
+                        m_moveSound.play();
+                    }
+                else{
                     senderPiece->setPos(oldPos);
                     return;
-                    
                 }
-                else {
-                    if(pieceToDel == nullptr)
-                        if(isPieceChecked(m_enemyKing)){
-                            m_checkSound.play();
-                            
-                        }
-                        else{
-                            m_moveSound.play();
-                        }
-                    else{
-                        senderPiece->setPos(oldPos);
-                        return;
-                    }
-                    
-                }
-                
-                m_lastChosenPiece = nullptr;
-                senderPiece->plusOneToTurn();
-                qDebug() << "white pawn";
-            }
-            else
-                senderPiece->setPos(oldPos);
-        }
-        else {
-            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
-            
-            if((delta.x() == 1 or delta.x() == -1) and delta.y() == reverseForPawn*1 and pieceToDel != nullptr){
-                
-                senderPiece->setPos(newPos);
-                deletePiece(pieceToDel);
-                if(isPieceChecked(m_playerKing)){
-                    m_checkSound.play();
-                    
-                }
-                else{
-                    m_captureSound.play();
-                }
-                
-                return;            
                 
             }
             
-            if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
-                                                   (delta.y() == reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == reverseForPawn*2)))) {
-                
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
-                
-                senderPiece->setPos(newPos);
-                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)) {
-                    
-                    senderPiece->setPos(oldPos);
-                    return;
-                    
-                }
-                else {
-                    if(pieceToDel == nullptr)
-                        if(isPieceChecked(m_playerKing)){
-                            m_checkSound.play();
-                            
-                        }
-                        else{
-                            m_moveSound.play();
-                        }
-                    else{
-                        senderPiece->setPos(oldPos);
-                        return;
-                    }
-                    
-                }
-                
-                m_lastChosenPiece = nullptr;
-                senderPiece->plusOneToTurn();
-                qDebug() << "white pawn";
-            }
-            else
-                senderPiece->setPos(oldPos);
+            m_lastChosenPiece = nullptr;
+            senderPiece->plusOneToTurn();
+            qDebug() << "white pawn";
         }
+        else
+            senderPiece->setPos(oldPos);
 
 
     } break;
 
     case PieceType::blackPawn:{
         
-        if(m_playerSide == senderPiece->getPieceColor()) {
+        ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
         
-            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+        if((delta.x() == 1 or delta.x() == -1) and delta.y() == -reverseForPawn*1 and pieceToDel != nullptr){
             
-            if((delta.x() == 1 or delta.x() == -1) and delta.y() == -reverseForPawn*1 and pieceToDel != nullptr){
-                
-                senderPiece->setPos(newPos);
-                deletePiece(pieceToDel);
-                if(isPieceChecked(m_enemyKing)){
-                    m_checkSound.play();
-                    
-                }
-                else{
-                    m_captureSound.play();
-                }
-                
-                return;            
+            senderPiece->setPos(newPos);
+            deletePiece(pieceToDel);
+            if(isPieceChecked(enemyKing)){
+                m_checkSound.play();
                 
             }
-            
-            if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
-            (delta.y() == -reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == -reverseForPawn*2)))) {
-                
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
-                
-                senderPiece->setPos(newPos);
-                if(m_playerKing != nullptr and isPieceChecked(m_playerKing)) {
-                    
-                    senderPiece->setPos(oldPos);
-                    return;
-                    
-                }
-                else {
-                    if(pieceToDel == nullptr)
-                        if(isPieceChecked(m_enemyKing)){
-                            m_checkSound.play();
-                            
-                        }
-                        else{
-                            m_moveSound.play();
-                        }
-                    else{
-                        senderPiece->setPos(oldPos);
-                        return;
-                    }
-                    
-                }
-                
-                m_lastChosenPiece = nullptr;
-                senderPiece->plusOneToTurn();
-                qDebug() << "white pawn";
+            else{
+                m_captureSound.play();
             }
-            else
-                senderPiece->setPos(oldPos);
-        
+            
+            return;            
+            
         }
-        else {
+        
+        if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
+        (delta.y() == -reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == -reverseForPawn*2)))) {
             
             ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
             
-            if((delta.x() == 1 or delta.x() == -1) and delta.y() == -reverseForPawn*1 and pieceToDel != nullptr){
+            senderPiece->setPos(newPos);
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
                 
-                senderPiece->setPos(newPos);
-                deletePiece(pieceToDel);
-                if(isPieceChecked(m_playerKing)){
-                    m_checkSound.play();
-                    
-                }
-                else{
-                    m_captureSound.play();
-                }
-                
-                return;            
+                senderPiece->setPos(oldPos);
+                return;
                 
             }
-            
-            if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
-                                                   (delta.y() == -reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == -reverseForPawn*2)))) {
-                
-                ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
-                
-                senderPiece->setPos(newPos);
-                if(m_enemyKing != nullptr and isPieceChecked(m_enemyKing)) {
-                    
+            else {
+                if(pieceToDel == nullptr)
+                    if(isPieceChecked(enemyKing)){
+                        m_checkSound.play();
+                        
+                    }
+                    else{
+                        m_moveSound.play();
+                    }
+                else{
                     senderPiece->setPos(oldPos);
                     return;
-                    
-                }
-                else {
-                    if(pieceToDel == nullptr)
-                        if(isPieceChecked(m_playerKing)){
-                            m_checkSound.play();
-                            
-                        }
-                        else{
-                            m_moveSound.play();
-                        }
-                    else{
-                        senderPiece->setPos(oldPos);
-                        return;
-                    }
-                    
                 }
                 
-                m_lastChosenPiece = nullptr;
-                senderPiece->plusOneToTurn();
-                qDebug() << "white pawn";
             }
-            else
-                senderPiece->setPos(oldPos);
             
+            m_lastChosenPiece = nullptr;
+            senderPiece->plusOneToTurn();
+            qDebug() << "white pawn";
         }
+        else
+            senderPiece->setPos(oldPos);
 
 
     } break;
@@ -1471,7 +1143,23 @@ bool ChessBoard::deletePiece(ChessPiece *pieceToDelete) {
     if(pieceToDelete == nullptr)
         return false;
     
-    //TODO: write king checking, if king denied deleting and stop game;
+    if(pieceToDelete->getType() == PieceType::king){
+        
+        if(pieceToDelete->getPieceColor() == true){
+            
+            qDebug() << "Black win the game";
+            
+        }
+        else{
+            
+            qDebug() << "White win the game";
+            
+        }
+        
+        pieceToDelete->setPixmap(QPixmap());
+        return true;
+        
+    }
     
     m_piecesArr.erase(std::find(m_piecesArr.begin(), m_piecesArr.end(), pieceToDelete));
     delete pieceToDelete;

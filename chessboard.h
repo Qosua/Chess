@@ -24,6 +24,9 @@ public:
     void setPlayerSide(bool side);
     bool getPlayerSide();
     
+signals:
+    
+    
 private:
     void drawField();
     void drawPieces();
@@ -62,11 +65,11 @@ private:
     QAudioOutput m_audioOutput4;
     QAudioOutput m_audioOutput5;
     
-    QString notifySoundPath = "C:/Repos/Qt/Chess/sounds/notify.mp3";
-    QString moveSoundPath = "C:/Repos/Qt/Chess/sounds/move-self.mp3";
-    QString checkSoundPath = "C:/Repos/Qt/Chess/sounds/move-check.mp3";
-    QString captureSoundPath = "C:/Repos/Qt/Chess/sounds/capture.mp3";
-    QString castleSoundPath = "C:/Repos/Qt/Chess/sounds/castle.mp3";
+    QString notifySoundPath = "C:/Repos/Qt/Chess/sounds/notify.wav";
+    QString moveSoundPath = "C:/Repos/Qt/Chess/sounds/move-self.wav";
+    QString checkSoundPath = "C:/Repos/Qt/Chess/sounds/move-check.wav";
+    QString captureSoundPath = "C:/Repos/Qt/Chess/sounds/capture.wav";
+    QString castleSoundPath = "C:/Repos/Qt/Chess/sounds/castle.wav";
 
 private slots:
     void catchChosenPiece(QPointF oldPos);
