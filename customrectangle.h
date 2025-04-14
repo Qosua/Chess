@@ -12,6 +12,8 @@ public:
     
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
     
+    bool reverseSomeCell;
+    
 private:
     
     QString m_text;
@@ -19,5 +21,6 @@ private:
     bool m_pos;
     
 };
+
 
 #endif // CUSTOMRECTANGLE_H
