@@ -5,6 +5,7 @@
 #include <QGraphicsRectItem>
 #include <QPen>
 #include <vector>
+#include <set>
 #include <QGraphicsBlurEffect>
 #include <cmath>
 #include <QMediaPlayer>
@@ -46,6 +47,8 @@ private:
     bool deletePiece(ChessPiece* pieceToDelete);
     bool isPieceChecked(ChessPiece* pieceToCheck);
     QString getPieceName(ChessPiece* piece);
+    void setAttackersPiecesFor(ChessPiece *pieceToCheck);
+    bool isKingMated();
     
     size_t m_cellSize = 80;
     std::vector<ChessPiece*> m_piecesArr;
@@ -53,6 +56,7 @@ private:
     QPointF m_lastChosenPos;
     bool m_playerSide = true;
     std::vector<QGraphicsEllipseItem*> m_tipsArr;
+    std::set<ChessPiece*> attackerPieces;
     ChessPiece* m_playerKing;
     ChessPiece* m_enemyKing;
     ChessPiece* tempIgnoredPiece = nullptr;
