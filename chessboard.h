@@ -48,7 +48,9 @@ private:
     bool isPieceChecked(ChessPiece* pieceToCheck);
     QString getPieceName(ChessPiece* piece);
     void setAttackersPiecesFor(ChessPiece *pieceToCheck);
-    bool isKingMated();
+    bool isKingMated(ChessPiece *pieceToCheck);
+    bool isKingCanGoOutofCheck(ChessPiece* pieceToCheck);
+    bool isPieceAbleToMoveAt(QPointF coords, ChessPiece* senderPiece);
     
     size_t m_cellSize = 80;
     std::vector<ChessPiece*> m_piecesArr;

@@ -371,6 +371,12 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
+                    
+                    setAttackersPiecesFor(enemyKing);
+                    if(isKingMated(enemyKing))
+                        qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                    
+                    attackerPieces.clear();
 
                 }
                 else{
@@ -430,6 +436,12 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
                     
+                    setAttackersPiecesFor(enemyKing);
+                    if(isKingMated(enemyKing))
+                        qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                    
+                    attackerPieces.clear();
+                    
                 }
                 else{
                     
@@ -486,6 +498,12 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 bool captureFlag = deletePiece(pieceToDel);
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
+                    
+                    setAttackersPiecesFor(enemyKing);
+                    if(isKingMated(enemyKing))
+                        qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                    
+                    attackerPieces.clear();
                     
                 }
                 else{
@@ -544,6 +562,12 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 bool captureFlag = deletePiece(pieceToDel);
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
+                    
+                    setAttackersPiecesFor(enemyKing);
+                    if(isKingMated(enemyKing))
+                        qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                    
+                    attackerPieces.clear();
                     
                 }
                 else{
@@ -604,6 +628,13 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
                     
+                    qDebug() << "KING IS CHECKED-QUEEN" << enemyKing->getPieceColor();
+                    setAttackersPiecesFor(enemyKing);
+                    if(isKingMated(enemyKing))
+                        qDebug() << "KING IS MATED-QUEEN" << enemyKing->getPieceColor();
+                    
+                    attackerPieces.clear();
+                    
                 }
                 else{
                     
@@ -662,6 +693,12 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
                     
+                    setAttackersPiecesFor(enemyKing);
+                    if(isKingMated(enemyKing))
+                        qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                    
+                    attackerPieces.clear();
+                    
                 }
                 else{
                     m_captureSound.play();
@@ -703,8 +740,16 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                     turnsCounter += 1;
                     
-                    if(isPieceChecked(enemyKing))
+                    if(isPieceChecked(enemyKing)){
                         m_checkSound.play();
+                        
+                        setAttackersPiecesFor(enemyKing);
+                        if(isKingMated(enemyKing))
+                            qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                        
+                        attackerPieces.clear();
+                        
+                    }
                     else
                         m_moveSound.play();
                 }
@@ -755,6 +800,12 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
                     
+                    setAttackersPiecesFor(enemyKing);
+                    if(isKingMated(enemyKing))
+                        qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                    
+                    attackerPieces.clear();
+                    
                 }
                 else{
                     m_captureSound.play();
@@ -796,8 +847,16 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                     turnsCounter += 1;
                     
-                    if(isPieceChecked(enemyKing))
+                    if(isPieceChecked(enemyKing)){
                         m_checkSound.play();
+                        
+                        setAttackersPiecesFor(enemyKing);
+                        if(isKingMated(enemyKing))
+                            qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                        
+                        attackerPieces.clear();
+                        
+                    }
                     else
                         m_moveSound.play();
                     
@@ -936,8 +995,6 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
         
         QPointF pieceCoord = senderPiece->scenePos();
         
-        qDebug() << pieceCoord;
-        
         //1 2
         ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + 2 * m_cellSize));
         if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor())
@@ -983,8 +1040,6 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
     case PieceType::king:{
         
         QPointF pieceCoord = senderPiece->scenePos();
-        
-        qDebug() << pieceCoord;
         
         ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
         if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor())
@@ -1335,7 +1390,6 @@ bool ChessBoard::isPieceOnWay(QPointF oldPos, QPointF newPos) {
         
     }
     
-    qDebug() << ansFlag << "-is piece on way";
     return ansFlag;
     
 }
@@ -1633,9 +1687,6 @@ bool ChessBoard::isPieceChecked(ChessPiece* pieceToCheck) {
         if(piece->getType() == PieceType::knight)
             flag = true; 
     
-    if(flag)
-        qDebug() << "White king checked";
-    
     return flag;
 }
 
@@ -1666,7 +1717,6 @@ QString ChessBoard::getPieceName(ChessPiece *piece) {
 
 void ChessBoard::setAttackersPiecesFor(ChessPiece *pieceToCheck) {
 
-    bool flag = false;
     ChessPiece* senderPiece = pieceToCheck;
     QPointF pieceCoord = senderPiece->scenePos();
     ChessPiece* piece = nullptr;
@@ -1914,21 +1964,527 @@ void ChessBoard::setAttackersPiecesFor(ChessPiece *pieceToCheck) {
 
 }
 
-bool ChessBoard::isKingMated() {
-
-    if(attackerPieces.size() == 2){
-
-
+bool ChessBoard::isKingMated(ChessPiece *pieceToCheck) {
+    
+    qDebug() << attackerPieces.size() << "-AttackersArrSize";
+    if(attackerPieces.size() >= 2){
+        
+        if(isKingCanGoOutofCheck(pieceToCheck))
+            return false;
 
     }
     if(attackerPieces.size() == 1){
-
-
+        
+        qDebug() << attackerPieces.size() << "-WE ARE HERE BEFORE";
+        if(isKingCanGoOutofCheck(pieceToCheck))
+            return false;
+        qDebug() << attackerPieces.size() << "-WE ARE AFTER";
+        
+        QPointF pieceCoord = pieceToCheck->scenePos();
+        ChessPiece* attacker = *attackerPieces.begin();
+        
+        switch(attacker->getType()){
+            
+        case PieceType::knight:{
+            
+            for(auto* elem : m_piecesArr) {
+                
+                if(elem->getPieceColor() != pieceToCheck->getPieceColor())
+                    continue;
+                
+                if(isPieceAbleToMoveAt(attacker->scenePos(), elem))
+                    return false;
+                
+            }
+            
+        }break;
+            
+        case PieceType::whitePawn:{
+            
+            for(auto* elem : m_piecesArr) {
+                
+                if(elem->getPieceColor() != pieceToCheck->getPieceColor())
+                    continue;
+                
+                if(isPieceAbleToMoveAt(attacker->scenePos(), elem))
+                    return false;
+                
+            }
+            
+        }break;
+            
+        case PieceType::blackPawn:{
+            
+            for(auto* elem : m_piecesArr) {
+                
+                if(elem->getPieceColor() != pieceToCheck->getPieceColor())
+                    continue;
+                
+                if(isPieceAbleToMoveAt(attacker->scenePos(), elem))
+                    return false;
+                
+            }
+            
+        }break;
+        
+        default:{
+            
+            qDebug() << attackerPieces.size() << "-WE ARE HERE";
+            QPointF attackVector = attacker->scenePos() - pieceCoord;
+            QPointF normalAttackVector = attackVector/m_cellSize;
+            
+            int counter = std::max(abs(normalAttackVector.x()), abs(normalAttackVector.y()));
+            
+            normalAttackVector /= counter;
+            qDebug() << "Counter-" << counter << " normalAttackVector" << normalAttackVector;
+            
+            for(int i = 1; i < counter+1; ++i){
+                
+                pieceCoord += QPointF(normalAttackVector.x() * m_cellSize, normalAttackVector.y() * m_cellSize);
+                qDebug() << pieceCoord;
+                
+                for(auto* elem : m_piecesArr) {
+                    
+                    if(elem->getPieceColor() != pieceToCheck->getPieceColor() or elem->getType() == PieceType::king)
+                        continue;
+                    
+                    if(isPieceAbleToMoveAt(pieceCoord, elem))
+                        return false;
+                    
+                }
+                
+            }
+            
+        } break;
+            
+        }
 
     }
+    if(attackerPieces.size() == 0)
+        return false;
 
+    return true;
+
+}
+
+bool ChessBoard::isKingCanGoOutofCheck(ChessPiece *pieceToCheck) {
+    
+    QPointF pieceCoord = pieceToCheck->scenePos();
+    
+    ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
+    if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
+        if(pieceCoord.x() + m_cellSize >= 0 and pieceCoord.x() + m_cellSize <= 540 and
+        pieceCoord.y() + m_cellSize >= 0 and pieceCoord.y() + m_cellSize <= 540) {
+            pieceToCheck->setPos(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize);
+            if(!isPieceChecked(pieceToCheck)) {
+                pieceToCheck->setPos(pieceCoord);
+                qDebug() << "1";
+                return true;
+            }
+            else
+                pieceToCheck->setPos(pieceCoord);
+        }
+    }
+    
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y()));
+    if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
+        if(pieceCoord.x() + m_cellSize >= 0 and pieceCoord.x() + m_cellSize <= 540 and
+            pieceCoord.y() >= 0 and pieceCoord.y() <= 540) {
+            pieceToCheck->setPos(pieceCoord.x() + m_cellSize, pieceCoord.y());
+            if(!isPieceChecked(pieceToCheck)) {
+                pieceToCheck->setPos(pieceCoord);
+                qDebug() << "2";
+                return true;
+            }
+            else
+                pieceToCheck->setPos(pieceCoord);
+        }
+    }
+    
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
+    if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
+        if(pieceCoord.x() + m_cellSize >= 0 and pieceCoord.x() + m_cellSize <= 540 and
+            pieceCoord.y() - m_cellSize >= 0 and pieceCoord.y() - m_cellSize <= 540) {
+            pieceToCheck->setPos(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize);
+            if(!isPieceChecked(pieceToCheck)) {
+                pieceToCheck->setPos(pieceCoord);
+                qDebug() << "3";
+                return true;
+            }
+            else
+                pieceToCheck->setPos(pieceCoord);
+        }
+    }
+    
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - m_cellSize));
+    if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
+        if(pieceCoord.x()>= 0 and pieceCoord.x()<= 540 and
+            pieceCoord.y() - m_cellSize >= 0 and pieceCoord.y() - m_cellSize <= 540) {
+            pieceToCheck->setPos(pieceCoord.x(), pieceCoord.y() - m_cellSize);
+            if(!isPieceChecked(pieceToCheck)) {
+                pieceToCheck->setPos(pieceCoord);
+                qDebug() << "4";
+                return true;
+            }
+            else
+                pieceToCheck->setPos(pieceCoord);
+        }
+    }
+    
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
+    if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
+        if(pieceCoord.x() - m_cellSize >= 0 and pieceCoord.x() - m_cellSize <= 540 and
+            pieceCoord.y() - m_cellSize >= 0 and pieceCoord.y() - m_cellSize <= 540) {
+            pieceToCheck->setPos(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize);
+            if(!isPieceChecked(pieceToCheck)) {
+                pieceToCheck->setPos(pieceCoord);
+                qDebug() << "5";
+                return true;
+            }
+            else
+                pieceToCheck->setPos(pieceCoord);
+        }
+    }
+    
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y()));
+    if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
+        if(pieceCoord.x() - m_cellSize >= 0 and pieceCoord.x() - m_cellSize <= 540 and
+            pieceCoord.y()>= 0 and pieceCoord.y()<= 540) {
+            pieceToCheck->setPos(pieceCoord.x() - m_cellSize, pieceCoord.y());
+            if(!isPieceChecked(pieceToCheck)) {
+                pieceToCheck->setPos(pieceCoord);
+                qDebug() << "6";
+                return true;
+            }
+            else
+                pieceToCheck->setPos(pieceCoord);
+        }
+    }
+    
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
+    if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
+        if(pieceCoord.x() - m_cellSize >= 0 and pieceCoord.x() - m_cellSize <= 540 and
+            pieceCoord.y() + m_cellSize >= 0 and pieceCoord.y() + m_cellSize <= 540) {
+            pieceToCheck->setPos(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize);
+            if(!isPieceChecked(pieceToCheck)) {
+                pieceToCheck->setPos(pieceCoord);
+                qDebug() << "7";
+                return true;
+            }
+            else
+                pieceToCheck->setPos(pieceCoord);
+        }
+    }
+    
+    piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + m_cellSize));
+    if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
+        if(pieceCoord.x()>= 0 and pieceCoord.x()<= 540 and
+            pieceCoord.y() + m_cellSize >= 0 and pieceCoord.y() + m_cellSize <= 540) {
+            pieceToCheck->setPos(pieceCoord.x(), pieceCoord.y() + m_cellSize);
+            if(!isPieceChecked(pieceToCheck)) {
+                pieceToCheck->setPos(pieceCoord);
+                qDebug() << "1";
+                return true;
+            }
+            else
+                pieceToCheck->setPos(pieceCoord);
+        }
+    }
+    
     return false;
+    
+}
 
+bool ChessBoard::isPieceAbleToMoveAt(QPointF coords, ChessPiece* senderPiece) {
+    
+    QPointF delta = coords - senderPiece->scenePos();
+    delta /= 80;
+    delta.setY(delta.y()*-1);
+    QPointF newPos = coords;
+    QPointF oldPos = senderPiece->scenePos();
+    
+    int reverseForPawn = m_playerSide ? 1 : -1;
+    ChessPiece* playerKing = (m_playerSide == senderPiece->getPieceColor() ? m_playerKing : m_enemyKing);
+    ChessPiece* enemyKing = (m_playerSide == senderPiece->getPieceColor() ? m_enemyKing : m_playerKing);
+    
+    switch(senderPiece->getType()){
+        
+    case PieceType::knight:{
+        
+        if( (delta.x() == 1 and (delta.y() == 2 or delta.y() == -2)) or
+            (delta.x() == 2 and (delta.y() == 1 or delta.y() == -1)) or
+            (delta.x() == -1 and (delta.y() == 2 or delta.y() == -2)) or
+            (delta.x() == -2 and (delta.y() == 1 or delta.y() == -1))){
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            tempIgnoredPiece = pieceToDel;
+            senderPiece->setPos(newPos);
+            
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
+                senderPiece->setPos(oldPos);
+                m_lastChosenPiece = nullptr;
+                return false;
+                
+            }
+            else {
+                senderPiece->setPos(oldPos);
+                m_lastChosenPiece = nullptr;
+                return true;
+                
+            }
+        }
+        else{
+            senderPiece->setPos(oldPos);
+            m_lastChosenPiece = nullptr;
+            return false;
+            
+        }
+        
+    } break;
+        
+    case PieceType::king:{
+        
+        if(std::abs(delta.x()) <= 1 and std::abs(delta.y()) <= 1){
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            tempIgnoredPiece = pieceToDel;
+            senderPiece->setPos(newPos);
+            
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
+                senderPiece->setPos(oldPos);
+                m_lastChosenPiece = nullptr;
+                return false;
+                
+            }
+            else {
+                senderPiece->setPos(oldPos);
+                m_lastChosenPiece = nullptr;
+                return true;
+                
+            }
+        }
+        else{
+            senderPiece->setPos(oldPos);
+            m_lastChosenPiece = nullptr;
+            return false;
+            
+        }
+        
+    } break;
+        
+    case PieceType::bishop:{
+        
+        if(std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1 and !isPieceOnWay(oldPos, newPos)) {
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            tempIgnoredPiece = pieceToDel;
+            senderPiece->setPos(newPos);
+            
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
+                senderPiece->setPos(oldPos);
+                m_lastChosenPiece = nullptr;
+                return false;
+                
+            }
+            else {
+                senderPiece->setPos(oldPos);
+                m_lastChosenPiece = nullptr;
+                return true;
+                
+            }
+        }
+        else{
+            senderPiece->setPos(oldPos);
+            m_lastChosenPiece = nullptr;
+            return false;
+            
+        }
+        
+        
+    } break;
+        
+    case PieceType::rook:{
+        
+        if((delta.x() == 0 or delta.y() == 0) and !isPieceOnWay(oldPos, newPos)){
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            tempIgnoredPiece = pieceToDel;
+            senderPiece->setPos(newPos);
+            
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
+                senderPiece->setPos(oldPos);
+                m_lastChosenPiece = nullptr;
+                return false;
+                
+            }
+            else {
+                senderPiece->setPos(oldPos);
+                m_lastChosenPiece = nullptr;
+                return true;
+                
+            }
+        }
+        else{
+            senderPiece->setPos(oldPos);
+            m_lastChosenPiece = nullptr;
+            return false;
+            
+        }
+        
+        
+    } break;
+        
+    case PieceType::queen:{
+        
+        if(!isPieceOnWay(oldPos, newPos) and ((std::abs(delta.x()/delta.x()) == 1 and std::abs(delta.y()/delta.x()) == 1) or
+            (delta.x() == 0 or delta.y() == 0))) {
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            tempIgnoredPiece = pieceToDel;
+            senderPiece->setPos(newPos);
+            
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
+                senderPiece->setPos(oldPos);
+                m_lastChosenPiece = nullptr;
+                return false;
+                
+            }
+            else {
+                senderPiece->setPos(oldPos);
+                m_lastChosenPiece = nullptr;
+                return true;
+                
+            }
+        }
+        else{
+            senderPiece->setPos(oldPos);
+            m_lastChosenPiece = nullptr;
+            return false;
+            
+        }
+        
+        
+    } break;
+        
+    case PieceType::whitePawn:{
+        
+        ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+        
+        if((delta.x() == 1 or delta.x() == -1) and delta.y() == reverseForPawn*1 and pieceToDel != nullptr){
+            
+            tempIgnoredPiece = pieceToDel;
+            senderPiece->setPos(newPos);
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
+                tempIgnoredPiece = nullptr;
+                senderPiece->setPos(oldPos);
+                return false;
+            }
+            else {
+                tempIgnoredPiece = nullptr;
+                senderPiece->setPos(oldPos);
+                return true;
+            }
+        }
+        
+        if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
+        (delta.y() == reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == reverseForPawn*2)))) {
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
+            tempIgnoredPiece = pieceToDel;
+            senderPiece->setPos(newPos);
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
+                senderPiece->setPos(oldPos);
+                tempIgnoredPiece = nullptr;
+                return false;
+                
+            }
+            else {
+                if(pieceToDel == nullptr) {
+                    
+                    senderPiece->setPos(oldPos);
+                    tempIgnoredPiece = nullptr;
+                    return true;
+                }
+                else {
+                    senderPiece->setPos(oldPos);
+                    tempIgnoredPiece = nullptr;
+                    return false;
+                }
+            }
+        }
+        else{
+            senderPiece->setPos(oldPos);
+            tempIgnoredPiece = nullptr;
+            return false;
+        }
+        
+        
+    } break;
+        
+    case PieceType::blackPawn:{
+        
+        ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+        
+        if((delta.x() == 1 or delta.x() == -1) and delta.y() == -reverseForPawn*1 and pieceToDel != nullptr){
+            
+            tempIgnoredPiece = pieceToDel;
+            senderPiece->setPos(newPos);
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
+                tempIgnoredPiece = nullptr;
+                senderPiece->setPos(oldPos);
+                return false;
+            }
+            else {
+                tempIgnoredPiece = nullptr;
+                senderPiece->setPos(oldPos);
+                return true;
+            }
+            
+        }
+        
+        if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
+        (delta.y() == -reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == -reverseForPawn*2)))) {
+            
+            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+            
+            tempIgnoredPiece = pieceToDel;
+            senderPiece->setPos(newPos);
+            if(playerKing != nullptr and isPieceChecked(playerKing)) {
+                senderPiece->setPos(oldPos);
+                tempIgnoredPiece = nullptr;
+                return false;
+                
+            }
+            else {
+                if(pieceToDel == nullptr) {
+                    
+                    senderPiece->setPos(oldPos);
+                    tempIgnoredPiece = nullptr;
+                    return true;
+                }
+                else {
+                    senderPiece->setPos(oldPos);
+                    tempIgnoredPiece = nullptr;
+                    return false;
+                }
+            }
+        }
+        else{
+            senderPiece->setPos(oldPos);
+            tempIgnoredPiece = nullptr;
+            return false;
+        }
+        
+        
+    } break;
+        
+    default:{
+        senderPiece->setPos(oldPos);
+        tempIgnoredPiece = nullptr;
+    } break;
+        
+    }
 }
 
 void ChessBoard::catchChosenPiece(QPointF oldPos) {
@@ -1952,10 +2508,7 @@ void ChessBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         return;
     }
         
-    qDebug() << "Mouse on scene released";
     if(m_lastChosenPiece != nullptr) {
-        
-        qDebug() << "m_lastChosenPiece not nullptr";
 
         QPointF newPos = event->scenePos();
         newPos.setX(int(newPos.x()/80)*80);
