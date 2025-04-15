@@ -37,12 +37,23 @@ void CustomRectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     
     painter->drawText(QPointF(x,y), m_text);
     
-    if(m_text == 'a' or m_text == 'A'){
-        
+    if(!reverseSomeCell){
+        if(m_text == 'a' or m_text == 'A') {
             x = rect().left() + textRect.width() - 3;
             y = rect().top() + 16;
+            
+            painter->drawText(QPointF(x,y), "1");
+        }
+    }
+    else{
+        if(m_text == 'h' or m_text == 'H') {
+            
+            x = rect().left() + textRect.width() - 3;
+            y = rect().top() + 16;
+            
+            painter->drawText(QPointF(x,y), "8");
         
-        painter->drawText(QPointF(x,y), "1");
+        }
         
     }
     

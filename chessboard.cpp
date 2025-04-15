@@ -67,6 +67,7 @@ void ChessBoard::drawField() {
         for(int j = 0; j < 8; ++j){
             
             CustomRectangle* rectangle = new CustomRectangle(QRectF(j*m_cellSize, i*m_cellSize, m_cellSize, m_cellSize));
+            rectangle->reverseSomeCell = (m_playerSide ? false : true);
             
             if((i+j)%2 == order) {
                 rectangle->setBrush(QBrush(QColor(235,236,208)));
@@ -77,26 +78,52 @@ void ChessBoard::drawField() {
             
             rectangle->setPen(QPen(Qt::transparent, 0));
             
-            if(j == 0) {
-                if((i+j)%2 == order) {
-                    rectangle->setText(QString(QChar('8' - i)), QColor(115,149,82), false);
+            if(m_playerSide) {
+                if(j == 0) {
+                    if((i+j)%2 == order) {
+                        rectangle->setText(QString(QChar('8' - i)), QColor(115,149,82), false);
+                    }
+                    else{
+                        rectangle->setText(QChar('8' - i), QColor(235,236,208), false);
+                    }
                 }
-                else{
-                    rectangle->setText(QChar('8' - i), QColor(235,236,208), false);
+                if(i == 7){
+                    
+                    if((i+j)%2 == order) {
+                        rectangle->setText(QString(QChar('a' + j)), QColor(115,149,82), true);
+                    }
+                    else{
+                        rectangle->setText(QChar('a' + j), QColor(235,236,208), true);
+                    }
+                    
                 }
-            }
-            if(i == 7){
                 
-                if((i+j)%2 == order) {
-                    rectangle->setText(QString(QChar('a' + j)), QColor(115,149,82), true);
+                this->addItem(rectangle);
+            }
+            else {
+                if(j == 0) {
+                    if((i+j)%2 == order) {
+                        rectangle->setText(QString(QChar('1' + i)), QColor(115,149,82), false);
+                    }
+                    else{
+                        rectangle->setText(QChar('1' + i), QColor(235,236,208), false);
+                    }
                 }
-                else{
-                    rectangle->setText(QChar('a' + j), QColor(235,236,208), true);
+                if(i == 7){
+                    
+                    if((i+j)%2 == order) {
+                        rectangle->setText(QString(QChar('h' - j)), QColor(115,149,82), true);
+                    }
+                    else{
+                        rectangle->setText(QChar('h' - j), QColor(235,236,208), true);
+                    }
+                    
                 }
                 
+                this->addItem(rectangle); 
+                
+                
             }
-            
-            this->addItem(rectangle);
             
         }
     }
