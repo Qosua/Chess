@@ -1459,27 +1459,58 @@ bool ChessBoard::isPieceChecked(ChessPiece* pieceToCheck) {
     QPointF pieceCoord = senderPiece->scenePos();
     ChessPiece* piece = nullptr;
     
-    if(senderPiece->getPieceColor() == m_playerSide) {
-        piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
-        if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-            if(piece->getType() == PieceType::blackPawn)
-                return true;
+    qDebug() << "SENDER IS " << pieceToCheck->getPieceColor();
+    
+    if(m_playerSide) {
         
-        piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
-        if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-            if(piece->getType() == PieceType::blackPawn)
-                return true;
+        if(senderPiece->getPieceColor()) {
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::blackPawn)
+                    return true;
+            
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::blackPawn)
+                    return true;
+        }
+        else{
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::whitePawn)
+                    return true;
+            
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::whitePawn)
+                    return true;
+        }
     }
-    else{
-        piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
-        if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-            if(piece->getType() == PieceType::whitePawn)
-                return true;
+    else {
         
-        piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
-        if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-            if(piece->getType() == PieceType::whitePawn)
-                return true;
+        if(senderPiece->getPieceColor()) {
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::blackPawn)
+                    return true;
+            
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::blackPawn)
+                    return true;
+        }
+        else{
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::whitePawn)
+                    return true;
+            
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::whitePawn)
+                    return true;
+        }
+        
     }
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
