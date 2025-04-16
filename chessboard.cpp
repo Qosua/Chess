@@ -26,17 +26,7 @@ ChessBoard::ChessBoard() {
 
 ChessBoard::~ChessBoard() {
     
-    delete m_lastChosenPiece;
-    m_lastChosenPiece = nullptr;
-    
-    for(ChessPiece* elem : m_piecesArr)
-        delete elem;
-    
-    for(QGraphicsEllipseItem* elem : m_tipsArr)
-        delete elem;
-    
-    m_piecesArr.clear();
-    m_tipsArr.clear();
+    clearBoard();
     
 }
 
@@ -340,7 +330,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
     delta /= 80;
     delta.setY(delta.y()*-1);
 
-    int reverseForPawn = m_playerSide ? 1 : -1;
+    int reverseForPawn = (m_playerSide ? 1 : -1);
     ChessPiece* playerKing = (m_playerSide == senderPiece->getPieceColor() ? m_playerKing : m_enemyKing);
     ChessPiece* enemyKing = (m_playerSide == senderPiece->getPieceColor() ? m_enemyKing : m_playerKing);
 
@@ -374,7 +364,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                     setAttackersPiecesFor(enemyKing);
                     if(isKingMated(enemyKing))
-                        qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                        checkMateFor(enemyKing->getPieceColor());
                     
                     attackerPieces.clear();
 
@@ -385,6 +375,10 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                         m_moveSound.play();
                     else
                         m_captureSound.play();
+                    
+                    if(isKingStalemated(enemyKing))
+                        staleMate();
+                    
                     
                 }
                 
@@ -438,7 +432,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                     setAttackersPiecesFor(enemyKing);
                     if(isKingMated(enemyKing))
-                        qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                        checkMateFor(enemyKing->getPieceColor());
                     
                     attackerPieces.clear();
                     
@@ -449,6 +443,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                         m_moveSound.play();
                     else
                         m_captureSound.play();
+                    
+                    if(isKingStalemated(enemyKing))
+                        staleMate();
                 }
                 
                 PlayerAction action;
@@ -501,7 +498,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                     setAttackersPiecesFor(enemyKing);
                     if(isKingMated(enemyKing))
-                        qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                        checkMateFor(enemyKing->getPieceColor());
                     
                     attackerPieces.clear();
                     
@@ -512,6 +509,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                         m_moveSound.play();
                     else
                         m_captureSound.play();
+                    
+                    if(isKingStalemated(enemyKing))
+                        staleMate();
                 }
                 
                 PlayerAction action;
@@ -565,7 +565,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                     setAttackersPiecesFor(enemyKing);
                     if(isKingMated(enemyKing))
-                        qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                        checkMateFor(enemyKing->getPieceColor());
                     
                     attackerPieces.clear();
                     
@@ -576,6 +576,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                         m_moveSound.play();
                     else
                         m_captureSound.play();
+                    
+                    if(isKingStalemated(enemyKing))
+                        staleMate();
                 }
                 
                 PlayerAction action;
@@ -628,10 +631,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
                     
-                    qDebug() << "KING IS CHECKED-QUEEN" << enemyKing->getPieceColor();
                     setAttackersPiecesFor(enemyKing);
                     if(isKingMated(enemyKing))
-                        qDebug() << "KING IS MATED-QUEEN" << enemyKing->getPieceColor();
+                        checkMateFor(enemyKing->getPieceColor());
                     
                     attackerPieces.clear();
                     
@@ -642,6 +644,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                         m_moveSound.play();
                     else
                         m_captureSound.play();
+                    
+                    if(isKingStalemated(enemyKing))
+                        staleMate();
                     
                 }
                 
@@ -695,13 +700,16 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                     setAttackersPiecesFor(enemyKing);
                     if(isKingMated(enemyKing))
-                        qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                        checkMateFor(enemyKing->getPieceColor());
                     
                     attackerPieces.clear();
                     
                 }
                 else{
                     m_captureSound.play();
+                    
+                    if(isKingStalemated(enemyKing))
+                        staleMate();
                 }
                 
                 PlayerAction action;
@@ -722,10 +730,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             
         }
 
-        if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
-           (delta.y() == reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == reverseForPawn*2)))) {
-            
-            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+        if(pieceToDel == nullptr and !isPieceOnWay(oldPos, newPos) and delta.x() == 0 and (delta.y() == reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == reverseForPawn*2))) {
             
             tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
@@ -745,13 +750,17 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                         
                         setAttackersPiecesFor(enemyKing);
                         if(isKingMated(enemyKing))
-                            qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                            checkMateFor(enemyKing->getPieceColor());
                         
                         attackerPieces.clear();
                         
                     }
-                    else
+                    else{
                         m_moveSound.play();
+                        
+                        if(isKingStalemated(enemyKing))
+                            staleMate();
+                    }
                 }
                 else {
                     senderPiece->setPos(oldPos);
@@ -802,13 +811,16 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                     
                     setAttackersPiecesFor(enemyKing);
                     if(isKingMated(enemyKing))
-                        qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                        checkMateFor(enemyKing->getPieceColor());
                     
                     attackerPieces.clear();
                     
                 }
                 else{
                     m_captureSound.play();
+                    
+                    if(isKingStalemated(enemyKing))
+                        staleMate();
                 }
                 
                 PlayerAction action;
@@ -828,10 +840,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             
         }
         
-        if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
-        (delta.y() == -reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == -reverseForPawn*2)))) {
-            
-            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+        if(pieceToDel == nullptr and !isPieceOnWay(oldPos, newPos) and delta.x() == 0 and (delta.y() == -reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == -reverseForPawn*2))) {
             
             tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
@@ -852,14 +861,17 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                         
                         setAttackersPiecesFor(enemyKing);
                         if(isKingMated(enemyKing))
-                            qDebug() << "KING IS MATED-" << enemyKing->getPieceColor();
+                            checkMateFor(enemyKing->getPieceColor());
                         
                         attackerPieces.clear();
                         
                     }
-                    else
+                    else{
                         m_moveSound.play();
-                    
+                        
+                        if(isKingStalemated(enemyKing))
+                            staleMate();
+                    }
                 }
                 else {
                     senderPiece->setPos(oldPos);
@@ -936,20 +948,19 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
         
         int reverse = m_playerSide ? 1 : -1;
         int moveCount = (senderPiece->getTurnsCount() == 0 ? 3 : 2);
-        QPointF pieceCoord =senderPiece->scenePos();
+        QPointF pieceCoord = senderPiece->scenePos();
         
         ChessPiece* piece1 = findPeiceOnCoords(QPointF(pieceCoord.x() - 80, pieceCoord.y() + reverse*80));
         ChessPiece* piece2 = findPeiceOnCoords(QPointF(pieceCoord.x() + 80, pieceCoord.y() + reverse*80));
         
-        if(piece1 != nullptr and piece1->getPieceColor() != PieceType::blackPawn)
+        if(piece1 != nullptr and piece1->getPieceColor() != senderPiece->getPieceColor())
             drawTipAt(pieceCoord.x() - 80, pieceCoord.y() + reverse*80);
         
-        if(piece2 != nullptr and piece2->getPieceColor() != PieceType::blackPawn)
+        if(piece2 != nullptr and piece2->getPieceColor() != senderPiece->getPieceColor())
             drawTipAt(pieceCoord.x() + 80, pieceCoord.y() + reverse*80);
         
         for(int i = 1; i < moveCount; ++i){
-
-            QPointF pieceCoord =senderPiece->scenePos();
+            
             ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + reverse*i*80));
 
             if(piece == nullptr) {
@@ -971,10 +982,10 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
         ChessPiece* piece1 = findPeiceOnCoords(QPointF(pieceCoord.x() - 80, pieceCoord.y() - reverse*80));
         ChessPiece* piece2 = findPeiceOnCoords(QPointF(pieceCoord.x() + 80, pieceCoord.y() - reverse*80));
         
-        if(piece1 != nullptr and piece1->getPieceColor() != PieceType::whitePawn)
+        if(piece1 != nullptr and piece1->getPieceColor() != senderPiece->getPieceColor())
             drawTipAt(pieceCoord.x() - 80, pieceCoord.y() - reverse*80);
         
-        if(piece2 != nullptr and piece2->getPieceColor() != PieceType::whitePawn)
+        if(piece2 != nullptr and piece2->getPieceColor() != senderPiece->getPieceColor())
             drawTipAt(pieceCoord.x() + 80, pieceCoord.y() - reverse*80);
         
         for(int i = 1; i < moveCount; ++i){
@@ -1716,17 +1727,17 @@ QString ChessBoard::getPieceName(ChessPiece *piece) {
 }
 
 void ChessBoard::setAttackersPiecesFor(ChessPiece *pieceToCheck) {
-
+    
     ChessPiece* senderPiece = pieceToCheck;
     QPointF pieceCoord = senderPiece->scenePos();
     ChessPiece* piece = nullptr;
-
+    
     if(senderPiece->getPieceColor() == m_playerSide) {
         piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
         if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
             if(piece->getType() == PieceType::blackPawn)
                 attackerPieces.insert(piece);
-
+        
         piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
         if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
             if(piece->getType() == PieceType::blackPawn)
@@ -1737,231 +1748,710 @@ void ChessBoard::setAttackersPiecesFor(ChessPiece *pieceToCheck) {
         if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
             if(piece->getType() == PieceType::whitePawn)
                 attackerPieces.insert(piece);
-
+        
         piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
         if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
             if(piece->getType() == PieceType::whitePawn)
                 attackerPieces.insert(piece);
     }
-
+    
     {
-    // piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
-    // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-    //     if(piece->getType() == PieceType::king)
-    //         attackerPieces.insert(piece);
-
-    // piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y()));
-    // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-    //     if(piece->getType() == PieceType::king)
-    //         attackerPieces.insert(piece);
-
-    // piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
-    // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-    //     if(piece->getType() == PieceType::king)
-    //         attackerPieces.insert(piece);
-
-    // piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - m_cellSize));
-    // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-    //     if(piece->getType() == PieceType::king)
-    //         attackerPieces.insert(piece);
-
-    // piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
-    // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-    //     if(piece->getType() == PieceType::king)
-    //         attackerPieces.insert(piece);
-
-    // piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y()));
-    // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-    //     if(piece->getType() == PieceType::king)
-    //         attackerPieces.insert(piece);
-
-    // piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
-    // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-    //     if(piece->getType() == PieceType::king)
-    //         attackerPieces.insert(piece);
-
-    // piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + m_cellSize));
-    // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-    //     if(piece->getType() == PieceType::king)
-    //         attackerPieces.insert(piece);
+        // piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
+        // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        //     if(piece->getType() == PieceType::king)
+        //         attackerPieces.insert(piece);
+        
+        // piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y()));
+        // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        //     if(piece->getType() == PieceType::king)
+        //         attackerPieces.insert(piece);
+        
+        // piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
+        // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        //     if(piece->getType() == PieceType::king)
+        //         attackerPieces.insert(piece);
+        
+        // piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - m_cellSize));
+        // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        //     if(piece->getType() == PieceType::king)
+        //         attackerPieces.insert(piece);
+        
+        // piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
+        // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        //     if(piece->getType() == PieceType::king)
+        //         attackerPieces.insert(piece);
+        
+        // piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y()));
+        // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        //     if(piece->getType() == PieceType::king)
+        //         attackerPieces.insert(piece);
+        
+        // piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
+        // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        //     if(piece->getType() == PieceType::king)
+        //         attackerPieces.insert(piece);
+        
+        // piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + m_cellSize));
+        // if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+        //     if(piece->getType() == PieceType::king)
+        //         attackerPieces.insert(piece);
     }
-
+    
     int counter = std::min(pieceCoord.x()/m_cellSize, pieceCoord.y()/m_cellSize);
     for(int i = 1; i < counter + 1; ++i){
-
+        
         ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() - i *m_cellSize));
-
+        
         if(piece == nullptr) continue;
         if(piece->getPieceColor() != senderPiece->getPieceColor()) {
-
+            
             if(piece->getType() == PieceType::queen or piece->getType() == PieceType::bishop)
                 attackerPieces.insert(piece);
             else break;
-
+            
         }
         else break;
     }
-
+    
     counter = std::min((m_cellSize*7 - pieceCoord.x())/m_cellSize, pieceCoord.y()/m_cellSize);
     for(int i = 1; i < counter + 1; ++i){
-
+        
         ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() - i *m_cellSize));
-
+        
         if(piece == nullptr) continue;
         if(piece->getPieceColor() != senderPiece->getPieceColor()) {
-
+            
             if(piece->getType() == PieceType::queen or piece->getType() == PieceType::bishop)
                 attackerPieces.insert(piece);
             else break;
-
+            
         }
         else break;
     }
-
+    
     counter = std::min((m_cellSize*7 - pieceCoord.x())/m_cellSize, (m_cellSize*7 - pieceCoord.y())/m_cellSize);
     for(int i = 1; i < counter + 1; ++i){
-
+        
         ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() + i *m_cellSize));
-
+        
         if(piece == nullptr) continue;
         if(piece->getPieceColor() != senderPiece->getPieceColor()) {
-
+            
             if(piece->getType() == PieceType::queen or piece->getType() == PieceType::bishop)
                 attackerPieces.insert(piece);
             else break;
-
+            
         }
         else break;
     }
-
+    
     counter = std::min(pieceCoord.x()/m_cellSize, (m_cellSize*7 - pieceCoord.y())/m_cellSize);
     for(int i = 1; i < counter + 1; ++i){
-
+        
         ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() + i *m_cellSize));
-
+        
         if(piece == nullptr) continue;
         if(piece->getPieceColor() != senderPiece->getPieceColor()) {
-
+            
             if(piece->getType() == PieceType::queen or piece->getType() == PieceType::bishop)
                 attackerPieces.insert(piece);
             else break;
-
+            
         }
         else break;
     }
-
+    
     counter = pieceCoord.y()/m_cellSize;
     for(int i = 1; i < counter + 1; ++i){
-
+        
         ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - i *m_cellSize));
-
+        
         if(piece == nullptr) continue;
         if(piece->getPieceColor() != senderPiece->getPieceColor()) {
-
+            
             if(piece->getType() == PieceType::queen or piece->getType() == PieceType::rook)
                 attackerPieces.insert(piece);
             else break;
-
+            
         }
         else break;
     }
-
+    
     counter = (m_cellSize*7 - pieceCoord.x())/m_cellSize;
     for(int i = 1; i < counter + 1; ++i){
-
+        
         ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y()));
-
+        
         if(piece == nullptr) continue;
         if(piece->getPieceColor() != senderPiece->getPieceColor()) {
-
+            
             if(piece->getType() == PieceType::queen or piece->getType() == PieceType::rook)
                 attackerPieces.insert(piece);
             else break;
-
+            
         }
         else break;
     }
-
+    
     counter = (m_cellSize*7 - pieceCoord.y())/m_cellSize;
     for(int i = 1; i < counter + 1; ++i){
-
+        
         ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + i *m_cellSize));
-
+        
         if(piece == nullptr) continue;
         if(piece->getPieceColor() != senderPiece->getPieceColor()) {
-
+            
             if(piece->getType() == PieceType::queen or piece->getType() == PieceType::rook)
                 attackerPieces.insert(piece);
             else break;
-
+            
         }
         else break;
     }
-
+    
     counter = pieceCoord.x()/m_cellSize;
     for(int i = 1; i < counter + 1; ++i){
-
+        
         ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y()));
-
+        
         if(piece == nullptr) continue;
         if(piece->getPieceColor() != senderPiece->getPieceColor()) {
-
+            
             if(piece->getType() == PieceType::queen or piece->getType() == PieceType::rook)
                 attackerPieces.insert(piece);
             else break;
-
+            
         }
         else break;
     }
-
+    
     //1 2
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + 2 * m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
         if(piece->getType() == PieceType::knight)
             attackerPieces.insert(piece);
-
+    
     //1 -2
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - 2 * m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
         if(piece->getType() == PieceType::knight)
             attackerPieces.insert(piece);
-
+    
     //2 1
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() + 2 * m_cellSize, pieceCoord.y() + m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
         if(piece->getType() == PieceType::knight)
             attackerPieces.insert(piece);
-
+    
     //2 -1
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() + 2 * m_cellSize, pieceCoord.y() - m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
         if(piece->getType() == PieceType::knight)
             attackerPieces.insert(piece);
-
+    
     //-1 2
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + 2 * m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
         if(piece->getType() == PieceType::knight)
             attackerPieces.insert(piece);
-
+    
     //-1 -2
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - 2 * m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
         if(piece->getType() == PieceType::knight)
             attackerPieces.insert(piece);
-
+    
     //-2 1
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() - 2 * m_cellSize, pieceCoord.y() + m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
         if(piece->getType() == PieceType::knight)
             attackerPieces.insert(piece);
-
+    
     //-2 -1
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() - 2 * m_cellSize, pieceCoord.y() - m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
         if(piece->getType() == PieceType::knight)
             attackerPieces.insert(piece);
+    
+}
 
+bool ChessBoard::isKingStalemated(ChessPiece *pieceToCheck) {
+    
+    QPointF pieceCoord = pieceToCheck->scenePos();
+    if(isKingCanGoOutofCheck(pieceToCheck))
+        return false;
+    qDebug() << "STALEMATE 2";
+    
+    for(auto senderPiece : m_piecesArr){
+        
+        if(senderPiece != nullptr and senderPiece->getPieceColor() != pieceToCheck->getPieceColor())
+            continue;
+        if(senderPiece->getType() == PieceType::king)
+            continue;
+        
+        qDebug() << "STALEMATE 3";
+        
+        switch(senderPiece->getType()) {
+            
+        case PieceType::blackPawn:{
+            
+            int reverse = m_playerSide ? 1 : -1;
+            int moveCount = (senderPiece->getTurnsCount() == 0 ? 3 : 2);
+            QPointF pieceCoord =senderPiece->scenePos();
+            
+            ChessPiece* piece1 = findPeiceOnCoords(QPointF(pieceCoord.x() - 80, pieceCoord.y() + reverse*80));
+            ChessPiece* piece2 = findPeiceOnCoords(QPointF(pieceCoord.x() + 80, pieceCoord.y() + reverse*80));
+            
+            bool ansFlag = false;
+            if(piece1 != nullptr and piece1->getPieceColor() != senderPiece->getPieceColor())
+                ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() - 80, pieceCoord.y() + reverse*80), senderPiece);
+            
+            if(ansFlag){
+                return false;
+                qDebug() << "STALEMATE BP1";
+            }
+            
+            if(piece2 != nullptr and piece2->getPieceColor() != senderPiece->getPieceColor())
+                ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() + 80, pieceCoord.y() + reverse*80), senderPiece);
+            
+            if(ansFlag){
+                return false;
+                qDebug() << "STALEMATE BP2";
+            }
+            
+            for(int i = 1; i < moveCount; ++i){
+                
+                QPointF pieceCoord =senderPiece->scenePos();
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + reverse*i*80));
+                
+                if(piece == nullptr) {
+                    
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x(), pieceCoord.y() + reverse*i*80), senderPiece);
+                    
+                    if(ansFlag){
+                        return false;
+                        qDebug() << "STALEMATE BP3";
+                    }
+                    
+                }
+                else break;
+            }
+        }break;
+            
+        case PieceType::whitePawn:{
+            qDebug() << "STALEMATE WP";
+            
+            int reverse = m_playerSide ? 1 : -1;
+            int moveCount = (senderPiece->getTurnsCount() == 0 ? 3 : 2);
+            QPointF pieceCoord =senderPiece->scenePos();
+            
+            ChessPiece* piece1 = findPeiceOnCoords(QPointF(pieceCoord.x() - 80, pieceCoord.y() - reverse*80));
+            ChessPiece* piece2 = findPeiceOnCoords(QPointF(pieceCoord.x() + 80, pieceCoord.y() - reverse*80));
+            
+            bool ansFlag = false;
+            if(piece1 != nullptr and piece1->getPieceColor() != senderPiece->getPieceColor())
+                ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() - 80, pieceCoord.y() - reverse*80), senderPiece);
+            
+            if(ansFlag)
+                return false;
+            
+            if(piece2 != nullptr and piece2->getPieceColor() != senderPiece->getPieceColor())
+                ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() + 80, pieceCoord.y() - reverse*80), senderPiece);
+            
+            if(ansFlag)
+                return false;
+            
+            for(int i = 1; i < moveCount; ++i){
+                
+                QPointF pieceCoord =senderPiece->scenePos();
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - reverse*i*80));
+                
+                if(piece == nullptr) {
+                    
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x(), pieceCoord.y() - reverse*i*80), senderPiece);
+                    
+                    if(ansFlag)
+                        return false;
+                    
+                }
+                else break;
+            }
+        }break;
+            
+        case PieceType::knight:{
+            qDebug() << "STALEMATE N";
+            
+            QPointF pieceCoord = senderPiece->scenePos();
+            bool ansFlag;
+            
+            //1 2
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + 2 * m_cellSize));
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor())
+                ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + 2 * m_cellSize), senderPiece);
+            
+            if(ansFlag)
+                return false;
+            
+            //1 -2
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - 2 * m_cellSize));
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor())
+                ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - 2 * m_cellSize), senderPiece);
+            
+            if(ansFlag)
+                return false;
+            
+            //2 1
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() + 2 * m_cellSize, pieceCoord.y() + m_cellSize));
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor())
+               ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() + 2 * m_cellSize, pieceCoord.y() + m_cellSize), senderPiece);
+            
+            if(ansFlag)
+                return false;
+            
+            //2 -1
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() + 2 * m_cellSize, pieceCoord.y() - m_cellSize));
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor())
+                ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() + 2 * m_cellSize, pieceCoord.y() - m_cellSize), senderPiece);
+            
+            if(ansFlag)
+                return false;
+            
+            //-1 2
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + 2 * m_cellSize));
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor())
+                ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + 2 * m_cellSize), senderPiece);
+            
+            if(ansFlag)
+                return false;
+            
+            //-1 -2
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - 2 * m_cellSize));
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor())
+                ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - 2 * m_cellSize), senderPiece);
+            
+            if(ansFlag)
+                return false;
+            
+            //-2 1
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - 2 * m_cellSize, pieceCoord.y() + m_cellSize));
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor())
+                ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() - 2 * m_cellSize, pieceCoord.y() + m_cellSize), senderPiece);
+            
+            if(ansFlag)
+                return false;
+            
+            //-2 -1
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - 2 * m_cellSize, pieceCoord.y() - m_cellSize));
+            if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor())
+                ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() - 2 * m_cellSize, pieceCoord.y() - m_cellSize), senderPiece);
+            
+            if(ansFlag)
+                return false;
+            
+        }break;
+            
+        case PieceType::bishop:{
+            qDebug() << "STALEMATE B";
+            
+            bool ansFlag;
+            QPointF pieceCoord = senderPiece->scenePos();
+            
+            int counter = std::min(pieceCoord.x()/m_cellSize, pieceCoord.y()/m_cellSize);
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() - i *m_cellSize));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() - i * m_cellSize), senderPiece);
+                    if(ansFlag)
+                        return false;
+
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = std::min((m_cellSize*7 - pieceCoord.x())/m_cellSize, pieceCoord.y()/m_cellSize);
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() - i *m_cellSize));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() - i * m_cellSize), senderPiece);
+                    if(ansFlag)
+                        return false;
+
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = std::min((m_cellSize*7 - pieceCoord.x())/m_cellSize, (m_cellSize*7 - pieceCoord.y())/m_cellSize);
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() + i *m_cellSize));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() + i * m_cellSize), senderPiece);
+                    if(ansFlag)
+                        return false;
+
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = std::min(pieceCoord.x()/m_cellSize, (m_cellSize*7 - pieceCoord.y())/m_cellSize);
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() + i *m_cellSize));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() + i * m_cellSize), senderPiece);
+                    if(ansFlag)
+                        return false;
+
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+        }break;
+            
+        case PieceType::rook:{
+            qDebug() << "STALEMATE R";
+            
+            bool ansFlag;
+            QPointF pieceCoord = senderPiece->scenePos();
+            
+            int counter = pieceCoord.y()/m_cellSize;
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - i *m_cellSize));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x(), pieceCoord.y() - i * m_cellSize), senderPiece);
+                    if(ansFlag)
+                        return false;
+
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = (m_cellSize*7 - pieceCoord.x())/m_cellSize;
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y()));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y()), senderPiece);
+                    if(ansFlag)
+                        return false;
+
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = (m_cellSize*7 - pieceCoord.y())/m_cellSize;
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + i *m_cellSize));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x(), pieceCoord.y() + i * m_cellSize), senderPiece);
+                    if(ansFlag)
+                        return false;
+
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = pieceCoord.x()/m_cellSize;
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y()));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y()), senderPiece);
+                    if(ansFlag)
+                        return false;
+
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+        }break;
+            
+        case PieceType::queen:{
+            qDebug() << "STALEMATE Q";
+            
+            bool ansFlag;
+            QPointF pieceCoord = senderPiece->scenePos();
+            
+            int counter = std::min(pieceCoord.x()/m_cellSize, pieceCoord.y()/m_cellSize);
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() - i *m_cellSize));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() - i * m_cellSize), senderPiece);
+                    if(ansFlag)
+                        return false;
+                    
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = std::min((m_cellSize*7 - pieceCoord.x())/m_cellSize, pieceCoord.y()/m_cellSize);
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() - i *m_cellSize));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() - i * m_cellSize), senderPiece);
+                    if(ansFlag)
+                        return false;
+                    
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = std::min((m_cellSize*7 - pieceCoord.x())/m_cellSize, (m_cellSize*7 - pieceCoord.y())/m_cellSize);
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() + i *m_cellSize));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y() + i * m_cellSize), senderPiece);
+                    if(ansFlag)
+                        return false;
+                    
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = std::min(pieceCoord.x()/m_cellSize, (m_cellSize*7 - pieceCoord.y())/m_cellSize);
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() + i *m_cellSize));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y() + i * m_cellSize), senderPiece);
+                    if(ansFlag)
+                        return false;
+                    
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = pieceCoord.y()/m_cellSize;
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - i *m_cellSize));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x(), pieceCoord.y() - i * m_cellSize), senderPiece);
+                    if(ansFlag)
+                        return false;
+                    
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = (m_cellSize*7 - pieceCoord.x())/m_cellSize;
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y()));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() + i * m_cellSize, pieceCoord.y()), senderPiece);
+                    if(ansFlag)
+                        return false;
+                    
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = (m_cellSize*7 - pieceCoord.y())/m_cellSize;
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + i *m_cellSize));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x(), pieceCoord.y() + i * m_cellSize), senderPiece);
+                    if(ansFlag)
+                        return false;
+                    
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+            counter = pieceCoord.x()/m_cellSize;
+            for(int i = 1; i < counter + 1; ++i){
+                
+                ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y()));
+                
+                if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor()) {
+                    ansFlag = isPieceAbleToMoveAt(QPointF(pieceCoord.x() - i * m_cellSize, pieceCoord.y()), senderPiece);
+                    if(ansFlag)
+                        return false;
+                    
+                    if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                        i = counter + 1;
+                }
+                else
+                    i = counter + 1;
+            }
+            
+        }break;
+            
+        }
+        
+    }
+    
+    return true;
+    
 }
 
 bool ChessBoard::isKingMated(ChessPiece *pieceToCheck) {
@@ -2418,10 +2908,8 @@ bool ChessBoard::isPieceAbleToMoveAt(QPointF coords, ChessPiece* senderPiece) {
             }
         }
         
-        if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
-        (delta.y() == reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == reverseForPawn*2)))) {
-            
-            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+        if(pieceToDel == nullptr and !isPieceOnWay(oldPos, newPos) and delta.x() == 0 and
+        (delta.y() == reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == reverseForPawn*2))) {
             
             tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
@@ -2475,10 +2963,8 @@ bool ChessBoard::isPieceAbleToMoveAt(QPointF coords, ChessPiece* senderPiece) {
             
         }
         
-        if(!isPieceOnWay(oldPos, newPos) and (delta.x() == 0 and
-        (delta.y() == -reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == -reverseForPawn*2)))) {
-            
-            ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
+        if(pieceToDel == nullptr and !isPieceOnWay(oldPos, newPos) and delta.x() == 0 and
+        (delta.y() == -reverseForPawn*1 or (senderPiece->getTurnsCount() == 0 and delta.y() == -reverseForPawn*2))) {
             
             tempIgnoredPiece = pieceToDel;
             senderPiece->setPos(newPos);
@@ -2517,6 +3003,48 @@ bool ChessBoard::isPieceAbleToMoveAt(QPointF coords, ChessPiece* senderPiece) {
     } break;
         
     }
+}
+
+void ChessBoard::clearBoard() {
+    
+    delete m_playerKing;
+    m_playerKing = nullptr;
+    delete m_enemyKing;
+    m_enemyKing = nullptr;
+    delete tempIgnoredPiece;
+    tempIgnoredPiece = nullptr;
+    delete m_lastChosenPiece;
+    m_lastChosenPiece = nullptr;
+    for(auto elem : attackerPieces){
+        
+        delete elem;
+        
+    }
+    for(auto elem : m_tipsArr){
+        
+        delete elem;
+        
+    }    for(auto elem : m_piecesArr){
+        
+        delete elem;
+        
+    }
+    attackerPieces.clear();
+    m_tipsArr.clear();
+    m_piecesArr.clear();
+    this->clear();
+    
+}
+
+void ChessBoard::checkMateFor(bool color) {
+    
+    qDebug() << "<<<CHECKMATE FOR " << (color ? "WHITE>>>" : "BLACK>>>");
+    
+}
+
+void ChessBoard::staleMate() {
+    
+    qDebug() << "<<<STALEMATE>>>";
 }
 
 void ChessBoard::catchChosenPiece(QPointF oldPos) {

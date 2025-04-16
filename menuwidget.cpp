@@ -7,8 +7,7 @@ MenuWidget::MenuWidget(QWidget* parent) :
 
 	connect(m_ui->MakeGameCC, &QPushButton::clicked, this, &MenuWidget::moveToMakerClassical);
 	connect(m_ui->FindGameCC, &QPushButton::clicked, this, &MenuWidget::moveToFinderClassical);
-	connect(m_ui->MakeGameCN, &QPushButton::clicked, this, &MenuWidget::moveToMakerNew);
-	connect(m_ui->FindGameCN, &QPushButton::clicked, this, &MenuWidget::moveToFinderNew);
+	connect(m_ui->offlineGame, &QPushButton::clicked, this, &MenuWidget::moveToOfflineGame);
 }
 
 MenuWidget::~MenuWidget() {

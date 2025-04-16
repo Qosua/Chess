@@ -48,9 +48,13 @@ private:
     bool isPieceChecked(ChessPiece* pieceToCheck);
     QString getPieceName(ChessPiece* piece);
     void setAttackersPiecesFor(ChessPiece *pieceToCheck);
+    bool isKingStalemated(ChessPiece *pieceToCheck);
     bool isKingMated(ChessPiece *pieceToCheck);
     bool isKingCanGoOutofCheck(ChessPiece* pieceToCheck);
     bool isPieceAbleToMoveAt(QPointF coords, ChessPiece* senderPiece);
+    void clearBoard();
+    void checkMateFor(bool color);
+    void staleMate();
     
     size_t m_cellSize = 80;
     std::vector<ChessPiece*> m_piecesArr;

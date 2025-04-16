@@ -46,13 +46,7 @@ void MainWindow::establishingConnections() {
 
     });
 
-    connect(m_menuWidget, &MenuWidget::moveToMakerNew, this, [this]() {
-
-        //TODO
-
-    });
-
-    connect(m_menuWidget, &MenuWidget::moveToFinderNew, this, [this]() {
+    connect(m_menuWidget, &MenuWidget::moveToOfflineGame, this, [this]() {
 
         //TODO
 

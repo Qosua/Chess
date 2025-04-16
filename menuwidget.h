@@ -14,8 +14,7 @@ public:
 signals:
 	void moveToMakerClassical();
 	void moveToFinderClassical();
-	void moveToMakerNew();
-    void moveToFinderNew();
+    void moveToOfflineGame();
 
 private:
 	Ui::MenuWidget* m_ui;
