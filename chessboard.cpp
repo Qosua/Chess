@@ -1975,7 +1975,7 @@ bool ChessBoard::isKingMated(ChessPiece *pieceToCheck) {
     }
     if(attackerPieces.size() == 1){
         
-        qDebug() << attackerPieces.size() << "-WE ARE HERE BEFORE";
+        qDebug() << attackerPieces.size() << "-WE ARE HERE BEFORE" << pieceToCheck->getPieceColor();
         if(isKingCanGoOutofCheck(pieceToCheck))
             return false;
         qDebug() << attackerPieces.size() << "-WE ARE AFTER";
@@ -2073,121 +2073,153 @@ bool ChessBoard::isKingCanGoOutofCheck(ChessPiece *pieceToCheck) {
     
     ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
     if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
-        if(pieceCoord.x() + m_cellSize >= 0 and pieceCoord.x() + m_cellSize <= 540 and
-        pieceCoord.y() + m_cellSize >= 0 and pieceCoord.y() + m_cellSize <= 540) {
+        if(pieceCoord.x() + m_cellSize >= 0 and pieceCoord.x() + m_cellSize <= 560 and
+        pieceCoord.y() + m_cellSize >= 0 and pieceCoord.y() + m_cellSize <= 560) {
+            tempIgnoredPiece = piece;
             pieceToCheck->setPos(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize);
             if(!isPieceChecked(pieceToCheck)) {
+                tempIgnoredPiece = nullptr;
                 pieceToCheck->setPos(pieceCoord);
                 qDebug() << "1";
                 return true;
             }
-            else
+            else{
                 pieceToCheck->setPos(pieceCoord);
+                tempIgnoredPiece = nullptr;
+            }
         }
     }
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y()));
     if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
-        if(pieceCoord.x() + m_cellSize >= 0 and pieceCoord.x() + m_cellSize <= 540 and
-            pieceCoord.y() >= 0 and pieceCoord.y() <= 540) {
+        if(pieceCoord.x() + m_cellSize >= 0 and pieceCoord.x() + m_cellSize <= 560 and
+            pieceCoord.y() >= 0 and pieceCoord.y() <= 560) {
+            tempIgnoredPiece = piece;
             pieceToCheck->setPos(pieceCoord.x() + m_cellSize, pieceCoord.y());
             if(!isPieceChecked(pieceToCheck)) {
+                tempIgnoredPiece = nullptr;
                 pieceToCheck->setPos(pieceCoord);
                 qDebug() << "2";
                 return true;
             }
-            else
+            else{
                 pieceToCheck->setPos(pieceCoord);
+                tempIgnoredPiece = nullptr;
+            }
         }
     }
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
     if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
-        if(pieceCoord.x() + m_cellSize >= 0 and pieceCoord.x() + m_cellSize <= 540 and
-            pieceCoord.y() - m_cellSize >= 0 and pieceCoord.y() - m_cellSize <= 540) {
+        if(pieceCoord.x() + m_cellSize >= 0 and pieceCoord.x() + m_cellSize <= 560 and
+            pieceCoord.y() - m_cellSize >= 0 and pieceCoord.y() - m_cellSize <= 560) {
+            tempIgnoredPiece = piece;
             pieceToCheck->setPos(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize);
             if(!isPieceChecked(pieceToCheck)) {
+                tempIgnoredPiece = nullptr;
                 pieceToCheck->setPos(pieceCoord);
                 qDebug() << "3";
                 return true;
             }
-            else
+            else{
                 pieceToCheck->setPos(pieceCoord);
+                tempIgnoredPiece = nullptr;
+            }
         }
     }
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - m_cellSize));
     if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
-        if(pieceCoord.x()>= 0 and pieceCoord.x()<= 540 and
-            pieceCoord.y() - m_cellSize >= 0 and pieceCoord.y() - m_cellSize <= 540) {
+        if(pieceCoord.x()>= 0 and pieceCoord.x()<= 560 and
+            pieceCoord.y() - m_cellSize >= 0 and pieceCoord.y() - m_cellSize <= 560) {
+            tempIgnoredPiece = piece;
             pieceToCheck->setPos(pieceCoord.x(), pieceCoord.y() - m_cellSize);
             if(!isPieceChecked(pieceToCheck)) {
+                tempIgnoredPiece = nullptr;
                 pieceToCheck->setPos(pieceCoord);
                 qDebug() << "4";
                 return true;
             }
-            else
+            else{
                 pieceToCheck->setPos(pieceCoord);
+                tempIgnoredPiece = nullptr;
+            }
         }
     }
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
     if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
-        if(pieceCoord.x() - m_cellSize >= 0 and pieceCoord.x() - m_cellSize <= 540 and
-            pieceCoord.y() - m_cellSize >= 0 and pieceCoord.y() - m_cellSize <= 540) {
+        if(pieceCoord.x() - m_cellSize >= 0 and pieceCoord.x() - m_cellSize <= 560 and
+            pieceCoord.y() - m_cellSize >= 0 and pieceCoord.y() - m_cellSize <= 560) {
+            tempIgnoredPiece = piece;
             pieceToCheck->setPos(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize);
             if(!isPieceChecked(pieceToCheck)) {
+                tempIgnoredPiece = nullptr;
                 pieceToCheck->setPos(pieceCoord);
                 qDebug() << "5";
                 return true;
             }
-            else
+            else{
                 pieceToCheck->setPos(pieceCoord);
+                tempIgnoredPiece = nullptr;
+            }
         }
     }
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y()));
     if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
-        if(pieceCoord.x() - m_cellSize >= 0 and pieceCoord.x() - m_cellSize <= 540 and
-            pieceCoord.y()>= 0 and pieceCoord.y()<= 540) {
+        if(pieceCoord.x() - m_cellSize >= 0 and pieceCoord.x() - m_cellSize <= 560 and
+            pieceCoord.y()>= 0 and pieceCoord.y()<= 560) {
+            tempIgnoredPiece = piece;
             pieceToCheck->setPos(pieceCoord.x() - m_cellSize, pieceCoord.y());
             if(!isPieceChecked(pieceToCheck)) {
+                tempIgnoredPiece = nullptr;
                 pieceToCheck->setPos(pieceCoord);
                 qDebug() << "6";
                 return true;
             }
-            else
+            else{
                 pieceToCheck->setPos(pieceCoord);
+                tempIgnoredPiece = nullptr;
+            }
         }
     }
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
     if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
-        if(pieceCoord.x() - m_cellSize >= 0 and pieceCoord.x() - m_cellSize <= 540 and
-            pieceCoord.y() + m_cellSize >= 0 and pieceCoord.y() + m_cellSize <= 540) {
+        if(pieceCoord.x() - m_cellSize >= 0 and pieceCoord.x() - m_cellSize <= 560 and
+            pieceCoord.y() + m_cellSize >= 0 and pieceCoord.y() + m_cellSize <= 560) {
+            tempIgnoredPiece = piece;
             pieceToCheck->setPos(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize);
             if(!isPieceChecked(pieceToCheck)) {
+                tempIgnoredPiece = nullptr;
                 pieceToCheck->setPos(pieceCoord);
                 qDebug() << "7";
                 return true;
             }
-            else
+            else{
                 pieceToCheck->setPos(pieceCoord);
+                tempIgnoredPiece = nullptr;
+            }
         }
     }
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + m_cellSize));
     if(piece == nullptr or piece->getPieceColor() != pieceToCheck->getPieceColor()){
-        if(pieceCoord.x()>= 0 and pieceCoord.x()<= 540 and
-            pieceCoord.y() + m_cellSize >= 0 and pieceCoord.y() + m_cellSize <= 540) {
+        if(pieceCoord.x()>= 0 and pieceCoord.x()<= 560 and
+            pieceCoord.y() + m_cellSize >= 0 and pieceCoord.y() + m_cellSize <= 560) {
+            tempIgnoredPiece = piece;
             pieceToCheck->setPos(pieceCoord.x(), pieceCoord.y() + m_cellSize);
             if(!isPieceChecked(pieceToCheck)) {
+                tempIgnoredPiece = nullptr;
                 pieceToCheck->setPos(pieceCoord);
-                qDebug() << "1";
+                qDebug() << "8";
                 return true;
             }
-            else
+            else{
                 pieceToCheck->setPos(pieceCoord);
+                tempIgnoredPiece = nullptr;
+            }
         }
     }
     
