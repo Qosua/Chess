@@ -423,6 +423,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             else {
                 
                 turnsCounter += 1;
+                senderPiece->plusOneToTurn();
                 
                 QString name = getPieceName(pieceToDel);
                 
@@ -556,6 +557,7 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             else {
                 
                 turnsCounter += 1;
+                senderPiece->plusOneToTurn();
                 
                 QString name = getPieceName(pieceToDel);
                 
@@ -1051,7 +1053,31 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
     case PieceType::king:{
         
         QPointF pieceCoord = senderPiece->scenePos();
-        
+
+        if(senderPiece->getTurnsCount() == 0) {
+
+            ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + 3*m_cellSize, pieceCoord.y()));
+            if(piece != nullptr and piece->getTurnsCount() == 0 and piece->getType() == PieceType::rook){
+
+                ChessPiece* piece1 = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y()));
+                ChessPiece* piece2 = findPeiceOnCoords(QPointF(pieceCoord.x() + 2*m_cellSize, pieceCoord.y()));
+                if(piece1 == nullptr and piece2 == nullptr)
+                    drawTipAt(pieceCoord.x() + 2*m_cellSize, pieceCoord.y());
+
+            }
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - 4*m_cellSize, pieceCoord.y()));
+            if(piece != nullptr and piece->getTurnsCount() == 0 and piece->getType() == PieceType::rook){
+
+                ChessPiece* piece1 = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y()));
+                ChessPiece* piece2 = findPeiceOnCoords(QPointF(pieceCoord.x() - 2*m_cellSize, pieceCoord.y()));
+                ChessPiece* piece3 = findPeiceOnCoords(QPointF(pieceCoord.x() - 3*m_cellSize, pieceCoord.y()));
+                if(piece1 == nullptr and piece2 == nullptr and piece3 == nullptr) {
+                    drawTipAt(pieceCoord.x() - 2*m_cellSize, pieceCoord.y());
+                    drawTipAt(pieceCoord.x() - 3*m_cellSize, pieceCoord.y());
+                }
+            }
+        }
+
         ChessPiece* piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
         if(piece == nullptr or piece->getPieceColor() != senderPiece->getPieceColor())
             drawTipAt(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize);
