@@ -408,7 +408,122 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
     } break;
 
     case PieceType::king:{
-            
+
+        if(delta.x() == 2 and delta.y() == 0 and !isPieceOnWay(oldPos, newPos)){
+
+            ChessPiece* checkRook = findPeiceOnCoords(QPointF(oldPos.x() + 3*m_cellSize, oldPos.y()));
+
+            if(checkRook != nullptr and checkRook->getTurnsCount() == 0 and senderPiece->getTurnsCount() == 0) {
+
+                senderPiece->setPos(newPos);
+                if(playerKing != nullptr and isPieceChecked(playerKing)) {
+
+                    senderPiece->setPos(oldPos);
+
+                }
+                else {
+
+                    checkRook->setPos(QPointF(oldPos.x() + m_cellSize, oldPos.y()));
+
+                    turnsCounter += 1;
+                    senderPiece->plusOneToTurn();
+
+                    if(isPieceChecked(enemyKing)){
+                        m_checkSound.play();
+
+                        setAttackersPiecesFor(enemyKing);
+                        if(isKingMated(enemyKing))
+                            checkMateFor(enemyKing->getPieceColor());
+
+                        attackerPieces.clear();
+
+                    }
+                    else{
+
+                        m_castleSound.play();
+
+                        if(isKingStalemated(enemyKing))
+                            staleMate();
+                    }
+
+                    PlayerAction action;
+                    action.actionSide = senderPiece->getPieceColor();
+                    action.pieceOne = senderPiece->getType();
+                    action.oldPos = oldPos;
+                    action.newPos = newPos;
+                    action.turnNumber = turnsCounter;
+                    action.turnType = ActionType::turn;
+                    emit turnMade(action);
+
+                    return;
+
+                }
+
+            }
+
+            m_lastChosenPiece = nullptr;
+        }
+        else
+            senderPiece->setPos(oldPos);
+
+        if(delta.x() == -2 and delta.y() == 0 and !isPieceOnWay(oldPos, newPos)){
+
+            ChessPiece* checkRook = findPeiceOnCoords(QPointF(oldPos.x() - 4*m_cellSize, oldPos.y()));
+
+            if(checkRook != nullptr and checkRook->getTurnsCount() == 0 and senderPiece->getTurnsCount() == 0) {
+
+                senderPiece->setPos(newPos);
+                if(playerKing != nullptr and isPieceChecked(playerKing)) {
+
+                    senderPiece->setPos(oldPos);
+
+                }
+                else {
+
+                    checkRook->setPos(QPointF(oldPos.x() - m_cellSize, oldPos.y()));
+
+                    turnsCounter += 1;
+                    senderPiece->plusOneToTurn();
+
+                    if(isPieceChecked(enemyKing)){
+                        m_checkSound.play();
+
+                        setAttackersPiecesFor(enemyKing);
+                        if(isKingMated(enemyKing))
+                            checkMateFor(enemyKing->getPieceColor());
+
+                        attackerPieces.clear();
+
+                    }
+                    else{
+
+                        m_castleSound.play();
+
+                        if(isKingStalemated(enemyKing))
+                            staleMate();
+                    }
+
+                    PlayerAction action;
+                    action.actionSide = senderPiece->getPieceColor();
+                    action.pieceOne = senderPiece->getType();
+                    action.oldPos = oldPos;
+                    action.newPos = newPos;
+                    action.turnNumber = turnsCounter;
+                    action.turnType = ActionType::turn;
+                    emit turnMade(action);
+
+                    return;
+
+                }
+
+            }
+
+            m_lastChosenPiece = nullptr;
+        }
+        else
+            senderPiece->setPos(oldPos);
+
+
         if(std::abs(delta.x()) <= 1 and std::abs(delta.y()) <= 1){
             
             ChessPiece* pieceToDel = findPeiceOnCoords(newPos);
@@ -1070,10 +1185,8 @@ void ChessBoard::highlightTips(ChessPiece *senderPiece) {
 
                 ChessPiece* piece1 = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y()));
                 ChessPiece* piece2 = findPeiceOnCoords(QPointF(pieceCoord.x() - 2*m_cellSize, pieceCoord.y()));
-                ChessPiece* piece3 = findPeiceOnCoords(QPointF(pieceCoord.x() - 3*m_cellSize, pieceCoord.y()));
-                if(piece1 == nullptr and piece2 == nullptr and piece3 == nullptr) {
+                if(piece1 == nullptr and piece2 == nullptr) {
                     drawTipAt(pieceCoord.x() - 2*m_cellSize, pieceCoord.y());
-                    drawTipAt(pieceCoord.x() - 3*m_cellSize, pieceCoord.y());
                 }
             }
         }
