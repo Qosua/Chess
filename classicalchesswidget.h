@@ -15,6 +15,8 @@ public:
     
 signals:
     void closeWidget();
+    void openPieceChoosingWidget(ChessPiece* piece);
+    void pieceChoosed(bool color);
 
 public slots:
 	void openMatchMaker();

@@ -15,8 +15,13 @@ QtApplication {
     
     Group{
         name: "MainWindow";
-        files: ["mainwindow.cpp",
-                "mainwindow.h"]
+        files: [
+            "choosepiecewidget.cpp",
+            "choosepiecewidget.h",
+            "choosepiecewidget.ui",
+            "mainwindow.cpp",
+            "mainwindow.h",
+        ]
     }
     Group{
         name: "ChessBoard";
@@ -31,9 +36,10 @@ QtApplication {
     }
     Group{
         name: "MenuWidget";
-        files: ["menuwidget.cpp",
-                "menuwidget.h",
-                "menuwidget.ui"]
+        files: [
+            "menuwidget.cpp",
+            "menuwidget.h",
+            "menuwidget.ui"]
     }
     Group{
         name: "ClassicalChessWidget";

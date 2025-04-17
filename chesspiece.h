@@ -36,6 +36,7 @@ public:
     void plusOneToTurn();
     void setMoveFlag(bool moveFlag);
     bool getMoveFlag();
+    void setTexture(QString path);
     
 signals:
     void newPosition(QPointF newPos, QPointF oldPos);

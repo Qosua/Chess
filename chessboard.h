@@ -26,9 +26,11 @@ public:
     void setupBoard();
     void setPlayerSide(bool side);
     bool getPlayerSide();
+    void recheckMateBy(bool color);
     
 signals:
     void turnMade(PlayerAction& actionInfo);
+    void openPieceChoosingWidget(ChessPiece* piece);
     
 private:
     void drawField();

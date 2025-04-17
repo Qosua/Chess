@@ -59,6 +59,12 @@ bool ChessPiece::getMoveFlag() {
 
 }
 
+void ChessPiece::setTexture(QString path) {
+    QPixmap pix(path);
+    pix.scaled(80,80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    this->setPixmap(pix);
+}
+
 void ChessPiece::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
     if(m_moveFlag != true)

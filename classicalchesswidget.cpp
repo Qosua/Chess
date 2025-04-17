@@ -99,6 +99,8 @@ void ClassicalChessWidget::startMatch() {
     m_board->setPlayerSide((m_choosenSide == 1 ? true : false));
     m_board->setupBoard();
     connect(m_board, &ChessBoard::turnMade, this, &ClassicalChessWidget::writeToHistory);
+    connect(m_board, &ChessBoard::openPieceChoosingWidget, this, &ClassicalChessWidget::openPieceChoosingWidget);
+    connect(this, &ClassicalChessWidget::pieceChoosed, m_board, &ChessBoard::recheckMateBy);
     
     m_ui->graphicsView->setScene(m_board);
     m_ui->graphicsView->scene()->setSceneRect(QRect(0,0, 640,640));

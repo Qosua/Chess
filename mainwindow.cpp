@@ -7,12 +7,14 @@ MainWindow::MainWindow(QWidget *parent)
     m_mainLayout = new QStackedLayout(m_centralWidget);
     m_menuWidget = new MenuWidget;
     m_classicalChess = new ClassicalChessWidget;
+    m_chooseWidget = new ChoosePieceWidget;
 
     m_mainLayout->addWidget(m_menuWidget);
     m_mainLayout->addWidget(m_classicalChess);
+    m_mainLayout->addWidget(m_chooseWidget);
 
     m_mainLayout->setCurrentIndex(0);
-    m_mainLayout->setStackingMode(QStackedLayout::StackOne);
+    m_mainLayout->setStackingMode(QStackedLayout::StackAll);
 
     this->establishingConnections();
 
@@ -55,6 +57,22 @@ void MainWindow::establishingConnections() {
     connect(m_classicalChess, &ClassicalChessWidget::closeWidget, this, [this]() {
         
         m_mainLayout->setCurrentIndex(0);
+        
+    });
+    
+    connect(m_classicalChess, &ClassicalChessWidget::openPieceChoosingWidget, this, [this](ChessPiece* sender) {
+        
+        m_chooseWidget->setPieceToChange(sender);
+        m_chooseWidget->setPiecesTextureByColor(sender->getPieceColor());
+        m_mainLayout->setCurrentIndex(2);
+        
+    });
+    
+    connect(m_chooseWidget, &ChoosePieceWidget::closeWidget, this, [this](bool color) {
+        
+        m_mainLayout->setCurrentIndex(1);
+        emit m_classicalChess->pieceChoosed(color);
+        
         
     });
 

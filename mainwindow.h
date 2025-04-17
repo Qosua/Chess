@@ -5,6 +5,7 @@
 
 #include "menuwidget.h"
 #include "classicalchesswidget.h"
+#include "choosepiecewidget.h"
 
 class MainWindow : public QMainWindow {
 
@@ -19,6 +20,7 @@ private:
     MenuWidget* m_menuWidget;
     ClassicalChessWidget* m_classicalChess;
     QWidget* m_centralWidget;
+    ChoosePieceWidget* m_chooseWidget;
 
     void establishingConnections();
 

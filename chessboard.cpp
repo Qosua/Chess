@@ -50,6 +50,23 @@ bool ChessBoard::getPlayerSide() {
     return m_playerSide;
 }
 
+void ChessBoard::recheckMateBy(bool color) {
+    
+    ChessPiece* enemyKing = (m_playerSide == color ? m_enemyKing : m_playerKing);
+    
+    if(isPieceChecked(enemyKing)){
+        m_checkSound.play();
+        
+        setAttackersPiecesFor(enemyKing);
+        if(isKingMated(enemyKing))
+            checkMateFor(enemyKing->getPieceColor());
+        
+        attackerPieces.clear();
+        
+    }
+    
+}
+
 void ChessBoard::drawField() {
 
     int order = (m_playerSide ? 0 : 1);
@@ -809,9 +826,18 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 
                 turnsCounter += 1;
                 
-                QString name = getPieceName(pieceToDel);
+                if(m_playerSide){
+                    if(newPos.y() == 0)
+                        openPieceChoosingWidget(senderPiece);
+                }
+                else{
+                    if(newPos.y() == 560)
+                        openPieceChoosingWidget(senderPiece);
+                }
                 
                 deletePiece(pieceToDel);
+                QString name = getPieceName(pieceToDel);
+                
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
                     
@@ -841,9 +867,11 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 emit turnMade(action);
                 
                 tempIgnoredPiece = nullptr;
+                senderPiece->plusOneToTurn();
                 return;
             }
             tempIgnoredPiece = nullptr;
+            senderPiece->plusOneToTurn();
             
         }
 
@@ -861,6 +889,15 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 if(pieceToDel == nullptr) {
                     
                     turnsCounter += 1;
+                    
+                    if(m_playerSide){
+                        if(newPos.y() == 0)
+                            openPieceChoosingWidget(senderPiece);
+                    }
+                    else{
+                        if(newPos.y() == 560)
+                            openPieceChoosingWidget(senderPiece);
+                    }
                     
                     if(isPieceChecked(enemyKing)){
                         m_checkSound.play();
@@ -920,9 +957,18 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 
                 turnsCounter += 1;
                 
-                QString name = getPieceName(pieceToDel);
+                if(m_playerSide){
+                    if(newPos.y() == 560)
+                        openPieceChoosingWidget(senderPiece);
+                }
+                else{
+                    if(newPos.y() == 0)
+                        openPieceChoosingWidget(senderPiece);
+                }
                 
+                QString name = getPieceName(pieceToDel);
                 deletePiece(pieceToDel);
+                
                 if(isPieceChecked(enemyKing)){
                     m_checkSound.play();
                     
@@ -951,9 +997,11 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 emit turnMade(action);
                 
                 tempIgnoredPiece = nullptr;
+                senderPiece->plusOneToTurn();
                 return;
             }
             tempIgnoredPiece = nullptr;
+            senderPiece->plusOneToTurn();
             
         }
         
@@ -972,6 +1020,15 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 if(pieceToDel == nullptr){
                     
                     turnsCounter += 1;
+                    
+                    if(m_playerSide){
+                        if(newPos.y() == 560)
+                            openPieceChoosingWidget(senderPiece);
+                    }
+                    else{
+                        if(newPos.y() == 0)
+                            openPieceChoosingWidget(senderPiece);
+                    }
                     
                     if(isPieceChecked(enemyKing)){
                         m_checkSound.play();
