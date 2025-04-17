@@ -1605,24 +1605,32 @@ bool ChessBoard::isPieceChecked(ChessPiece* pieceToCheck) {
         if(senderPiece->getPieceColor()) {
             piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
             if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-                if(piece->getType() == PieceType::blackPawn)
+                if(piece->getType() == PieceType::blackPawn){
+                    qDebug() << "CHECK BY PAWN 1";
                     return true;
+                }
             
             piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
             if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-                if(piece->getType() == PieceType::blackPawn)
+                if(piece->getType() == PieceType::blackPawn){
+                    qDebug() << "CHECK BY PAWN 2";
                     return true;
+                }
         }
         else{
             piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
             if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-                if(piece->getType() == PieceType::whitePawn)
+                if(piece->getType() == PieceType::whitePawn){
+                    qDebug() << "CHECK BY PAWN 3";
                     return true;
+                }
             
             piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
             if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-                if(piece->getType() == PieceType::whitePawn)
+                if(piece->getType() == PieceType::whitePawn){
+                    qDebug() << "CHECK BY PAWN 4";
                     return true;
+                }
         }
     }
     else {
@@ -1630,66 +1638,74 @@ bool ChessBoard::isPieceChecked(ChessPiece* pieceToCheck) {
         if(senderPiece->getPieceColor()) {
             piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
             if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-                if(piece->getType() == PieceType::blackPawn)
+                if(piece->getType() == PieceType::blackPawn){
+                    qDebug() << "CHECK BY PAWN 5";
                     return true;
-            
+                }
+
             piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
             if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-                if(piece->getType() == PieceType::blackPawn)
+                if(piece->getType() == PieceType::blackPawn){
+                    qDebug() << "CHECK BY PAWN 6";
                     return true;
+                }
         }
         else{
             piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
             if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-                if(piece->getType() == PieceType::whitePawn)
+                if(piece->getType() == PieceType::whitePawn){
+                    qDebug() << "CHECK BY PAWN 7";
                     return true;
+                }
             
             piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
             if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-                if(piece->getType() == PieceType::whitePawn)
+                if(piece->getType() == PieceType::whitePawn){
+                    qDebug() << "CHECK BY PAWN 8";
                     return true;
+                }
         }
         
     }
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-        if(piece->getType() == PieceType::king)
+        if(piece->getType() == PieceType::king or piece->getType() == PieceType::queen)
             return true;
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y()));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-        if(piece->getType() == PieceType::king)
+        if(piece->getType() == PieceType::king or piece->getType() == PieceType::queen)
             return true;
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-        if(piece->getType() == PieceType::king)
+        if(piece->getType() == PieceType::king or piece->getType() == PieceType::queen)
             return true;
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() - m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-        if(piece->getType() == PieceType::king)
+        if(piece->getType() == PieceType::king or piece->getType() == PieceType::queen)
             return true;
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-        if(piece->getType() == PieceType::king)
+        if(piece->getType() == PieceType::king or piece->getType() == PieceType::queen)
             return true;
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y()));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-        if(piece->getType() == PieceType::king)
+        if(piece->getType() == PieceType::king or piece->getType() == PieceType::queen)
             return true;
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-        if(piece->getType() == PieceType::king)
+        if(piece->getType() == PieceType::king or piece->getType() == PieceType::queen)
             return true;
     
     piece = findPeiceOnCoords(QPointF(pieceCoord.x(), pieceCoord.y() + m_cellSize));
     if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-        if(piece->getType() == PieceType::king)
+        if(piece->getType() == PieceType::king or piece->getType() == PieceType::queen)
             return true;
     
     int counter = std::min(pieceCoord.x()/m_cellSize, pieceCoord.y()/m_cellSize);
@@ -1901,28 +1917,73 @@ void ChessBoard::setAttackersPiecesFor(ChessPiece *pieceToCheck) {
     ChessPiece* senderPiece = pieceToCheck;
     QPointF pieceCoord = senderPiece->scenePos();
     ChessPiece* piece = nullptr;
-    
-    if(senderPiece->getPieceColor() == m_playerSide) {
-        piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
-        if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-            if(piece->getType() == PieceType::blackPawn)
-                attackerPieces.insert(piece);
-        
-        piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
-        if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-            if(piece->getType() == PieceType::blackPawn)
-                attackerPieces.insert(piece);
+
+    if(m_playerSide) {
+
+        if(senderPiece->getPieceColor()) {
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::blackPawn){
+                    qDebug() << "ATTACK BY PAWN 1";
+                    attackerPieces.insert(piece);
+                }
+
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::blackPawn){
+                    qDebug() << "ATTACK BY PAWN 2";
+                    attackerPieces.insert(piece);
+                }
+        }
+        else{
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::whitePawn){
+                    qDebug() << "ATTACK BY PAWN 3";
+                    attackerPieces.insert(piece);
+                }
+
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::whitePawn){
+                    qDebug() << "ATTACK BY PAWN 4";
+                    attackerPieces.insert(piece);
+                }
+        }
     }
-    else{
-        piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
-        if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-            if(piece->getType() == PieceType::whitePawn)
-                attackerPieces.insert(piece);
-        
-        piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
-        if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
-            if(piece->getType() == PieceType::whitePawn)
-                attackerPieces.insert(piece);
+    else {
+
+        if(senderPiece->getPieceColor()) {
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() + m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::blackPawn){
+                    qDebug() << "ATTACK BY PAWN 5";
+                    attackerPieces.insert(piece);
+                }
+
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() + m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::blackPawn){
+                    qDebug() << "ATTACK BY PAWN 6";
+                    attackerPieces.insert(piece);
+                }
+        }
+        else{
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() + m_cellSize, pieceCoord.y() - m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::whitePawn){
+                    qDebug() << "ATTACK BY PAWN 7";
+                    attackerPieces.insert(piece);
+                }
+
+            piece = findPeiceOnCoords(QPointF(pieceCoord.x() - m_cellSize, pieceCoord.y() - m_cellSize));
+            if(piece != nullptr and piece->getPieceColor() != senderPiece->getPieceColor())
+                if(piece->getType() == PieceType::whitePawn){
+                    qDebug() << "ATTACK BY PAWN 8";
+                    attackerPieces.insert(piece);
+                }
+        }
+
     }
     
     {
