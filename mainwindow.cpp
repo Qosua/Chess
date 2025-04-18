@@ -8,10 +8,12 @@ MainWindow::MainWindow(QWidget *parent)
     m_menuWidget = new MenuWidget;
     m_classicalChess = new ClassicalChessWidget;
     m_chooseWidget = new ChoosePieceWidget;
+    m_winWidget = new WinWidget;
 
     m_mainLayout->addWidget(m_menuWidget);
     m_mainLayout->addWidget(m_classicalChess);
     m_mainLayout->addWidget(m_chooseWidget);
+    m_mainLayout->addWidget(m_winWidget);
 
     m_mainLayout->setCurrentIndex(0);
     m_mainLayout->setStackingMode(QStackedLayout::StackAll);
@@ -49,8 +51,9 @@ void MainWindow::establishingConnections() {
     });
 
     connect(m_menuWidget, &MenuWidget::moveToOfflineGame, this, [this]() {
-
-        //TODO
+        
+        m_classicalChess->startOfflineMatch();
+        m_mainLayout->setCurrentIndex(1);
 
     });
     
@@ -73,6 +76,19 @@ void MainWindow::establishingConnections() {
         m_mainLayout->setCurrentIndex(1);
         emit m_classicalChess->pieceChoosed(color);
         
+        
+    });
+    connect(m_classicalChess, &ClassicalChessWidget::openWinInfoWidget, this, [this](bool isWin, bool color) {
+        
+        m_winWidget->setFlags(isWin, color);
+        m_mainLayout->setCurrentIndex(3);
+        
+    });
+    connect(m_winWidget, &WinWidget::closeWidget, this, [this]() {
+        
+        emit m_classicalChess->clearBoard();
+        m_classicalChess->clearInfo();
+        m_mainLayout->setCurrentIndex(0);
         
     });
 

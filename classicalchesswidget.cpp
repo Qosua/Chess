@@ -33,6 +33,43 @@ void ClassicalChessWidget::openMatchFinder() {
 
 }
 
+void ClassicalChessWidget::startOfflineMatch() {
+    
+    m_ui->stackedWidget->setCurrentIndex(1);
+    
+    m_board = new ChessBoard;
+    m_board->setPlayerSide(true);
+    m_board->setupBoard();
+    connect(m_board, &ChessBoard::turnMade, this, &ClassicalChessWidget::writeToHistory);
+    connect(m_board, &ChessBoard::openPieceChoosingWidget, this, &ClassicalChessWidget::openPieceChoosingWidget);
+    connect(this, &ClassicalChessWidget::pieceChoosed, m_board, &ChessBoard::recheckMateBy);
+    connect(m_board, &ChessBoard::openWinInfoWidget, this, &ClassicalChessWidget::openWinInfoWidget);
+    connect(this, &ClassicalChessWidget::clearBoard, m_board, &ChessBoard::clearBoard);
+    
+    m_ui->graphicsView->setScene(m_board);
+    m_ui->graphicsView->scene()->setSceneRect(QRect(0,0, 640,640));
+    
+    if(m_ui->graphicsView->scene() != nullptr){
+        m_ui->graphicsView->fitInView(m_ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    }
+    
+}
+
+void ClassicalChessWidget::clearInfo() {
+    
+    m_ui->listWidget->clear();
+    m_ui->infoLabel->clear();
+    m_choosenSide = 0;
+    m_ui->chooseWhite->setEnabled(true);
+    m_ui->chooseBlack->setEnabled(true);
+    m_ui->chooseWhite->setStyleSheet("background-color: #21201d");
+    m_ui->chooseBlack->setStyleSheet("background-color: #21201d");
+    m_waitingOpponent = false;
+    m_ui->infoLabel_2->clear();
+    m_ui->ipLine->clear();
+    
+}
+
 void ClassicalChessWidget::establishingConnections() {
     
     connect(m_ui->close, &QPushButton::clicked, this, [this](){
@@ -101,6 +138,8 @@ void ClassicalChessWidget::startMatch() {
     connect(m_board, &ChessBoard::turnMade, this, &ClassicalChessWidget::writeToHistory);
     connect(m_board, &ChessBoard::openPieceChoosingWidget, this, &ClassicalChessWidget::openPieceChoosingWidget);
     connect(this, &ClassicalChessWidget::pieceChoosed, m_board, &ChessBoard::recheckMateBy);
+    connect(m_board, &ChessBoard::openWinInfoWidget, this, &ClassicalChessWidget::openWinInfoWidget);
+    connect(this, &ClassicalChessWidget::clearBoard, m_board, &ChessBoard::clearBoard);
     
     m_ui->graphicsView->setScene(m_board);
     m_ui->graphicsView->scene()->setSceneRect(QRect(0,0, 640,640));

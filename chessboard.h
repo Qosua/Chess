@@ -27,10 +27,12 @@ public:
     void setPlayerSide(bool side);
     bool getPlayerSide();
     void recheckMateBy(bool color);
+    void clearBoard();
     
 signals:
     void turnMade(PlayerAction& actionInfo);
     void openPieceChoosingWidget(ChessPiece* piece);
+    void openWinInfoWidget(bool winOrDraw, bool winForColor);
     
 private:
     void drawField();
@@ -54,7 +56,6 @@ private:
     bool isKingMated(ChessPiece *pieceToCheck);
     bool isKingCanGoOutofCheck(ChessPiece* pieceToCheck);
     bool isPieceAbleToMoveAt(QPointF coords, ChessPiece* senderPiece);
-    void clearBoard();
     void checkMateFor(bool color);
     void staleMate();
     

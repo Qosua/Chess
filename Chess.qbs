@@ -21,6 +21,9 @@ QtApplication {
             "choosepiecewidget.ui",
             "mainwindow.cpp",
             "mainwindow.h",
+            "winwidget.cpp",
+            "winwidget.h",
+            "winwidget.ui",
         ]
     }
     Group{

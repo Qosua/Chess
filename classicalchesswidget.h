@@ -17,10 +17,14 @@ signals:
     void closeWidget();
     void openPieceChoosingWidget(ChessPiece* piece);
     void pieceChoosed(bool color);
+    void openWinInfoWidget(bool winOrDraw, bool winForColor);
+    void clearBoard();
 
 public slots:
 	void openMatchMaker();
 	void openMatchFinder();
+    void startOfflineMatch();
+    void clearInfo();
 
 private:
     ChessBoard* m_board = nullptr;

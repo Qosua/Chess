@@ -1610,9 +1610,6 @@ void ChessBoard::deletePieceAt(QPointF pos) {
 
     m_piecesArr.erase(std::find(m_piecesArr.begin(), m_piecesArr.end(), piece));
     delete piece;
-    
-    // m_soundPlayer.setSource(QUrl::fromLocalFile(captureSoundPath));
-    // m_soundPlayer.play();
 
 }
 
@@ -1623,17 +1620,6 @@ bool ChessBoard::deletePiece(ChessPiece *pieceToDelete) {
     
     if(pieceToDelete->getType() == PieceType::king){
         
-        if(pieceToDelete->getPieceColor() == true){
-            
-            qDebug() << "Black win the game";
-            
-        }
-        else{
-            
-            qDebug() << "White win the game";
-            
-        }
-        
         pieceToDelete->setPixmap(QPixmap());
         return true;
         
@@ -1641,8 +1627,6 @@ bool ChessBoard::deletePiece(ChessPiece *pieceToDelete) {
     
     m_piecesArr.erase(std::find(m_piecesArr.begin(), m_piecesArr.end(), pieceToDelete));
     delete pieceToDelete;
-    
-    //m_captureSound.play();
     
     return true;
     
@@ -3295,14 +3279,6 @@ bool ChessBoard::isPieceAbleToMoveAt(QPointF coords, ChessPiece* senderPiece) {
 
 void ChessBoard::clearBoard() {
     
-    delete m_playerKing;
-    m_playerKing = nullptr;
-    delete m_enemyKing;
-    m_enemyKing = nullptr;
-    delete tempIgnoredPiece;
-    tempIgnoredPiece = nullptr;
-    delete m_lastChosenPiece;
-    m_lastChosenPiece = nullptr;
     for(auto elem : attackerPieces){
         
         delete elem;
@@ -3312,11 +3288,18 @@ void ChessBoard::clearBoard() {
         
         delete elem;
         
-    }    for(auto elem : m_piecesArr){
+    }
+    for(auto elem : m_piecesArr){
         
         delete elem;
         
     }
+    
+    m_playerKing = nullptr;
+    m_enemyKing = nullptr;
+    tempIgnoredPiece = nullptr;
+    m_lastChosenPiece = nullptr;
+    
     attackerPieces.clear();
     m_tipsArr.clear();
     m_piecesArr.clear();
@@ -3327,12 +3310,14 @@ void ChessBoard::clearBoard() {
 void ChessBoard::checkMateFor(bool color) {
     
     qDebug() << "<<<CHECKMATE FOR " << (color ? "WHITE>>>" : "BLACK>>>");
+    emit openWinInfoWidget(true, color);
     
 }
 
 void ChessBoard::staleMate() {
     
     qDebug() << "<<<STALEMATE>>>";
+    emit openWinInfoWidget(false, false);
 }
 
 void ChessBoard::catchChosenPiece(QPointF oldPos) {
