@@ -28,6 +28,7 @@ public:
     bool getPlayerSide();
     void recheckMateBy(bool color);
     void clearBoard();
+    void setOfflineMatch();
     
 signals:
     void turnMade(PlayerAction& actionInfo);
@@ -58,6 +59,7 @@ private:
     bool isPieceAbleToMoveAt(QPointF coords, ChessPiece* senderPiece);
     void checkMateFor(bool color);
     void staleMate();
+    void changeTurnColorTo(bool color);
     
     size_t m_cellSize = 80;
     std::vector<ChessPiece*> m_piecesArr;
@@ -70,6 +72,8 @@ private:
     ChessPiece* m_enemyKing;
     ChessPiece* tempIgnoredPiece = nullptr;
     size_t turnsCounter = 0;
+    bool m_isOfflineMatch;
+    bool m_isPlayerTurn = true;
 
     QMediaPlayer m_notifySound;
     QMediaPlayer m_moveSound;

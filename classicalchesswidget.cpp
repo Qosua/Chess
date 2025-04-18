@@ -39,6 +39,7 @@ void ClassicalChessWidget::startOfflineMatch() {
     
     m_board = new ChessBoard;
     m_board->setPlayerSide(true);
+    m_board->setOfflineMatch();
     m_board->setupBoard();
     connect(m_board, &ChessBoard::turnMade, this, &ClassicalChessWidget::writeToHistory);
     connect(m_board, &ChessBoard::openPieceChoosingWidget, this, &ClassicalChessWidget::openPieceChoosingWidget);

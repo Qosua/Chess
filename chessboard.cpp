@@ -302,6 +302,14 @@ void ChessBoard::preparePieces() {
         
     }
     
+    for(auto elem : m_piecesArr){
+        
+        if(elem->getPieceColor() == false)
+            elem->setMoveFlag(false);
+        
+    }
+        
+    
     
 }
 
@@ -371,6 +379,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 
+                if(m_isOfflineMatch)
+                    changeTurnColorTo(!senderPiece->getPieceColor());
+                
                 turnsCounter += 1;
                 
                 QString name = getPieceName(pieceToDel);
@@ -439,6 +450,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
                 }
                 else {
+                    
+                    if(m_isOfflineMatch)
+                        changeTurnColorTo(!senderPiece->getPieceColor());
 
                     checkRook->setPos(QPointF(oldPos.x() + m_cellSize, oldPos.y()));
 
@@ -496,6 +510,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
 
                 }
                 else {
+                    
+                    if(m_isOfflineMatch)
+                        changeTurnColorTo(!senderPiece->getPieceColor());
 
                     checkRook->setPos(QPointF(oldPos.x() - m_cellSize, oldPos.y()));
 
@@ -553,6 +570,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 
             }
             else {
+                
+                if(m_isOfflineMatch)
+                    changeTurnColorTo(!senderPiece->getPieceColor());
                 
                 turnsCounter += 1;
                 senderPiece->plusOneToTurn();
@@ -621,6 +641,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 
+                if(m_isOfflineMatch)
+                    changeTurnColorTo(!senderPiece->getPieceColor());
+                
                 turnsCounter += 1;
                 
                 QString name = getPieceName(pieceToDel);
@@ -687,6 +710,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
                 
             }
             else {
+                
+                if(m_isOfflineMatch)
+                    changeTurnColorTo(!senderPiece->getPieceColor());
                 
                 turnsCounter += 1;
                 senderPiece->plusOneToTurn();
@@ -757,6 +783,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 
+                if(m_isOfflineMatch)
+                    changeTurnColorTo(!senderPiece->getPieceColor());
+                
                 turnsCounter += 1;
                 
                 QString name = getPieceName(pieceToDel);
@@ -824,6 +853,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 
+                if(m_isOfflineMatch)
+                    changeTurnColorTo(!senderPiece->getPieceColor());
+                
                 turnsCounter += 1;
                 
                 if(m_playerSide){
@@ -887,6 +919,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 if(pieceToDel == nullptr) {
+                    
+                    if(m_isOfflineMatch)
+                        changeTurnColorTo(!senderPiece->getPieceColor());
                     
                     turnsCounter += 1;
                     
@@ -955,6 +990,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             }
             else {
                 
+                if(m_isOfflineMatch)
+                    changeTurnColorTo(!senderPiece->getPieceColor());
+                
                 turnsCounter += 1;
                 
                 if(m_playerSide){
@@ -1018,6 +1056,9 @@ void ChessBoard::validateTurnWithType(QPointF newPos, QPointF oldPos, ChessPiece
             else {
                 
                 if(pieceToDel == nullptr){
+                    
+                    if(m_isOfflineMatch)
+                        changeTurnColorTo(!senderPiece->getPieceColor());
                     
                     turnsCounter += 1;
                     
@@ -3318,6 +3359,23 @@ void ChessBoard::staleMate() {
     
     qDebug() << "<<<STALEMATE>>>";
     emit openWinInfoWidget(false, false);
+}
+
+void ChessBoard::changeTurnColorTo(bool color) {
+    
+    for(auto elem : m_piecesArr){
+        
+        if(elem->getPieceColor() == color)
+            elem->setMoveFlag(true);
+        else
+            elem->setMoveFlag(false);
+        
+    }
+    
+}
+
+void ChessBoard::setOfflineMatch() {
+    m_isOfflineMatch = true;
 }
 
 void ChessBoard::catchChosenPiece(QPointF oldPos) {

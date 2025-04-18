@@ -5,7 +5,6 @@ ChessPiece::ChessPiece(const QString& path, const int cellSize) {
     QPixmap pix(path);
     pix.scaled(cellSize,cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     this->setPixmap(pix);
-    //this->setFlag(QGraphicsPixmapItem::ItemIsSelectable);
     
     m_cellSize = cellSize;
     m_turnsCount = 0;
@@ -48,9 +47,7 @@ void ChessPiece::setMoveFlag(bool moveFlag) {
 
     m_moveFlag = moveFlag;
     
-    //if(m_moveFlag == true)
-        this->setFlag(QGraphicsPixmapItem::ItemIsMovable);
-
+    this->setFlag(QGraphicsPixmapItem::ItemIsMovable, moveFlag);
 }
 
 bool ChessPiece::getMoveFlag() {
@@ -68,7 +65,7 @@ void ChessPiece::setTexture(QString path) {
 void ChessPiece::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
     if(m_moveFlag != true)
-        //return;
+        return;
     
     qDebug() << "Piece has been pressed";
     if(event->button() == Qt::MouseButton::LeftButton){
