@@ -38,6 +38,8 @@ void ChessBoard::setupBoard(){
     this->update();
     this->setBackgroundBrush(QBrush(QColor(38,37,34)));
 
+    HistoryBlockWidget::resetTime();
+
     m_notifySound.play();
     
 }

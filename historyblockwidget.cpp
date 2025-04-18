@@ -54,5 +54,41 @@ HistoryBlockWidget::HistoryBlockWidget(const PlayerAction& info) :
         m_ui->actionIcon->setText(" X");
         
     }
+
+    QString minutes;
+    QString seconds;
+    QString hour;
+    QString time;
+
+    m_next = QDateTime::currentDateTime().toSecsSinceEpoch();
+
+    qint64 deltaTime = m_next-m_prev;
+
+    minutes = QString::number(deltaTime/60);
+    seconds = QString::number(deltaTime%60);
+    hour = QString::number(deltaTime/3600);
+
+    if(seconds.size() == 1)
+        seconds = '0' + seconds;
+
+    if(minutes.size() == 1)
+        minutes = '0' + minutes;
+
+    if(hour.size() != 0)
+        time = hour + ':';
+
+    time += minutes + ":" + seconds;
+
+    m_ui->time->setText(time);
+
+    m_prev = m_next;
     
+
+}
+
+void HistoryBlockWidget::resetTime() {
+
+    m_prev = QDateTime::currentDateTime().toSecsSinceEpoch();
+
+
 }
