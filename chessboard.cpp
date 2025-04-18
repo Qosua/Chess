@@ -301,17 +301,7 @@ void ChessBoard::preparePieces() {
         m_playerKing = piece15;
         m_enemyKing = piece13;
         
-        
     }
-    
-    for(auto elem : m_piecesArr){
-        
-        if(elem->getPieceColor() == false)
-            elem->setMoveFlag(false);
-        
-    }
-        
-    
     
 }
 
